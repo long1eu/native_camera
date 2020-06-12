@@ -1,0 +1,44 @@
+group 'com.example.native_camera'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 17
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation "com.drewnoakes:metadata-extractor:2.11.0"
+    implementation "androidx.exifinterface:exifinterface:1.2.0"
+    implementation "androidx.annotation:annotation:1.1.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+}

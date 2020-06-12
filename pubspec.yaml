@@ -1,0 +1,29 @@
+name: native_camera
+description: A new Flutter project.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_plugin_android_lifecycle: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.native_camera
+        pluginClass: NativeCameraPlugin
+      ios:
+        pluginClass: NativeCameraPlugin
+      macos:
+        pluginClass: NativeCameraPlugin
