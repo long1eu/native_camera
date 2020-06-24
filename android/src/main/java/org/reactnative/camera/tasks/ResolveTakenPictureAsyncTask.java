@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.long1.nativecamera.proto.CameraState;
 import io.flutter.plugin.common.MethodChannel;
 
 public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Map<String, Object>> {
@@ -30,10 +31,10 @@ public class ResolveTakenPictureAsyncTask extends AsyncTask<Void, Void, Map<Stri
     private byte[] mImageData;
     private Map<String, Object> mOptions;
     private File mCacheDirectory;
-    private int mDeviceOrientation;
+    private CameraState.Orientation mDeviceOrientation;
     private PictureSavedDelegate mPictureSavedDelegate;
 
-    public ResolveTakenPictureAsyncTask(byte[] imageData, MethodChannel.Result promise, Map<String, Object> options, File cacheDirectory, int deviceOrientation, PictureSavedDelegate delegate) {
+    public ResolveTakenPictureAsyncTask(byte[] imageData, MethodChannel.Result promise, Map<String, Object> options, File cacheDirectory, CameraState.Orientation deviceOrientation, PictureSavedDelegate delegate) {
         mPromise = promise;
         mOptions = options;
         mImageData = imageData;

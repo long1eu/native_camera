@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+option java_package = "eu.long1.nativecamera.proto";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME;
+
+message CameraInfo {
+  enum LensFacing {
+    FRONT = 0;
+    BACK = 1;
+    EXTERNAL = 2;
+  }
+
+  string id = 1;
+  LensFacing facing = 2;
+}
+
+
+message CameraState {
+  enum Flash {
+    FLASH_ON = 0;
+    FLASH_AUTO = 1;
+    FLASH_OFF = 2;
+    FLASH_TORCH = 3;
+    // Available only on Android
+    FLASH_RED_EYE = 4;
+  }
+
+  enum Orientation {
+    ORIENTATION_AUTO = 0;
+    ORIENTATION_LEFT = 1;
+    ORIENTATION_RIGHT = 2;
+    ORIENTATION_UP = 3;
+    ORIENTATION_DOWN = 4;
+  }
+
+  // Only used on iOS
+  enum VideoCodec {
+    VIDEO_CODEC_APPLE_PRO_RES422 = 0;
+    VIDEO_CODEC_APPLE_PRO_RES4444 = 1;
+    VIDEO_CODEC_H264 = 2;
+    VIDEO_CODEC_HVEC = 3;
+    VIDEO_CODEC_JPEG = 4;
+  }
+
+  enum VideoQuality {
+    VIDEO_QUALITY_2160P = 0;
+    VIDEO_QUALITY_1080P = 1;
+    VIDEO_QUALITY_720P = 2;
+    VIDEO_QUALITY_480P = 3;
+    VIDEO_QUALITY_4_3 = 4;
+    // Available only on iOS
+    VIDEO_QUALITY_288P = 5;
+  }
+
+  // Only used on iOS
+  enum VideoStabilization {
+    VIDEO_STABILIZATION_AUTO = 0;
+    VIDEO_STABILIZATION_STANDARD = 1;
+    VIDEO_STABILIZATION_OFF = 2;
+    VIDEO_STABILIZATION_CINEMATIC = 3;
+  }
+
+  enum WhiteBalance {
+    WHITE_BALANCE_AUTO = 0;
+    WHITE_BALANCE_CLOUDY = 1;
+    WHITE_BALANCE_FLUORESCENT = 2;
+    WHITE_BALANCE_INCANDESCENT = 3;
+    WHITE_BALANCE_SHADOW = 4;
+    WHITE_BALANCE_SUNNY = 5;
+  }
+
+  float zoom = 1;
+
+  // Only used on iOS
+  float max_zoom = 2;
+  AspectRatio ratio = 3;
+  float focus_depth = 4;
+  string camera_id = 5;
+  bool auto_focus = 6;
+  Flash flash = 7;
+  float exposure = 8;
+  WhiteBalance white_balance = 9;
+  bool play_sound_on_capture = 10;
+  // Only used on Android > 21
+  bool use_camera_2 = 11;
+}
+
+message AspectRatio {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Size {
+  int32 width = 1;
+  int32 height = 2;
+}
+
+message Range {
+  int32 min = 1;
+  int32 max = 2;
+}

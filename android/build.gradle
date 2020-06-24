@@ -1,4 +1,4 @@
-group 'com.example.native_camera'
+group 'com.example.nativecamera'
 version '1.0'
 
 buildscript {
@@ -41,4 +41,5 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:1.2.0"
     implementation "androidx.annotation:annotation:1.1.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation "com.google.protobuf:protobuf-javalite:3.12.0"
 }

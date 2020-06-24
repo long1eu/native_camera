@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_plugin_android_lifecycle: ^1.0.8
+  protobuf: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -21,7 +22,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.native_camera
+        package: eu.long1.nativecamera
         pluginClass: NativeCameraPlugin
       ios:
         pluginClass: NativeCameraPlugin

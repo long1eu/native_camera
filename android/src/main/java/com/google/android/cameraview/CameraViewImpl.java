@@ -28,6 +28,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 
+import eu.long1.nativecamera.proto.CameraState;
+
 
 abstract class CameraViewImpl {
 
@@ -56,10 +58,6 @@ abstract class CameraViewImpl {
 
     abstract boolean isCameraOpened();
 
-    abstract void setFacing(int facing);
-
-    abstract int getFacing();
-
     abstract void setCameraId(String id);
 
     abstract String getCameraId();
@@ -85,9 +83,9 @@ abstract class CameraViewImpl {
 
     abstract boolean getAutoFocus();
 
-    abstract void setFlash(int flash);
+    abstract void setFlash(CameraState.Flash flash);
 
-    abstract int getFlash();
+    abstract CameraState.Flash getFlash();
 
     abstract void setExposureCompensation(float exposure);
 
@@ -96,11 +94,11 @@ abstract class CameraViewImpl {
     abstract void takePicture(Map<String, Object> options);
 
     abstract boolean record(String path, int maxDuration, int maxFileSize,
-                            boolean recordAudio, CamcorderProfile profile, int orientation, int fps);
+                            boolean recordAudio, CamcorderProfile profile, CameraState.Orientation orientation, int fps);
 
     abstract void stopRecording();
 
-    abstract int getCameraOrientation();
+    abstract CameraState.Orientation getCameraOrientation();
 
     abstract void setFocusArea(float x, float y);
 
@@ -114,9 +112,9 @@ abstract class CameraViewImpl {
 
     abstract public ArrayList<int[]> getSupportedPreviewFpsRange();
 
-    abstract void setWhiteBalance(int whiteBalance);
+    abstract void setWhiteBalance(CameraState.WhiteBalance whiteBalance);
 
-    abstract int getWhiteBalance();
+    abstract CameraState.WhiteBalance getWhiteBalance();
 
     abstract void setPlaySoundOnCapture(boolean playSoundOnCapture);
 
@@ -140,15 +138,15 @@ abstract class CameraViewImpl {
 
         void onCameraClosed();
 
-        void onPictureTaken(byte[] data, int deviceOrientation);
+        void onPictureTaken(byte[] data, CameraState.Orientation deviceOrientation);
 
-        void onVideoRecorded(String path, int videoOrientation, int deviceOrientation);
+        void onVideoRecorded(String path, CameraState.Orientation videoOrientation, CameraState.Orientation deviceOrientation);
 
-        void onRecordingStart(String path, int videoOrientation, int deviceOrientation);
+        void onRecordingStart(String path, CameraState.Orientation videoOrientation, CameraState.Orientation deviceOrientation);
 
         void onRecordingEnd();
 
-        void onFramePreview(byte[] data, int width, int height, int orientation);
+        void onFramePreview(byte[] data, int width, int height, CameraState.Orientation orientation);
 
         void onMountError();
     }

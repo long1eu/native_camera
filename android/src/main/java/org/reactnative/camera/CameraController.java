@@ -34,13 +34,14 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import eu.long1.nativecamera.proto.CameraState;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.embedding.engine.plugins.lifecycle.FlutterLifecycleAdapter;
 import io.flutter.plugin.common.MethodChannel;
 
 @SuppressWarnings("ConstantConditions")
-public class RNCameraController extends CameraImplementation implements ActivityAware, PictureSavedDelegate, LifecycleObserver {
+public class CameraController extends CameraImplementation implements ActivityAware, PictureSavedDelegate, LifecycleObserver {
     private Context mContext;
     private Queue<MethodChannel.Result> mPictureTakenPromises = new ConcurrentLinkedQueue<>();
     private Map<MethodChannel.Result, Map<String, Object>> mPictureTakenOptions = new ConcurrentHashMap<>();
@@ -54,7 +55,7 @@ public class RNCameraController extends CameraImplementation implements Activity
     private Boolean mIsRecording = false;
     private Boolean mIsRecordingInterrupted = false;
 
-    public RNCameraController(Context context, DartMessenger dartMessenger, SurfaceTexture surfaceTexture) {
+    public CameraController(Context context, DartMessenger dartMessenger, SurfaceTexture surfaceTexture) {
         super(context, true, surfaceTexture);
         mContext = context;
         mDartMessenger = dartMessenger;
@@ -67,26 +68,25 @@ public class RNCameraController extends CameraImplementation implements Activity
 
             @Override
             public void onMountError(CameraImplementation cameraController) {
-                System.out.println("Camera view threw an error - component could not be rendered.");
                 CameraMountErrorEvent.obtain("Camera view threw an error - component could not be rendered.").dispatch(mDartMessenger.getEventSink());
             }
 
             @SuppressWarnings("ConstantConditions")
             @Override
-            public void onPictureTaken(CameraImplementation cameraController, final byte[] data, int deviceOrientation) {
+            public void onPictureTaken(CameraImplementation cameraController, final byte[] data, CameraState.Orientation deviceOrientation) {
                 MethodChannel.Result promise = mPictureTakenPromises.poll();
                 Map<String, Object> options = mPictureTakenOptions.remove(promise);
                 if (options.containsKey("fastMode") && (Boolean) options.get("fastMode")) {
                     promise.success(null);
                 }
                 final File cacheDirectory = mPictureTakenDirectories.remove(promise);
-                new ResolveTakenPictureAsyncTask(data, promise, options, cacheDirectory, deviceOrientation, RNCameraController.this)
+                new ResolveTakenPictureAsyncTask(data, promise, options, cacheDirectory, deviceOrientation, CameraController.this)
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 PictureTakenEvent.obtain().dispatch(mDartMessenger.getEventSink());
             }
 
             @Override
-            public void onRecordingStart(CameraImplementation cameraController, String path, int videoOrientation, int deviceOrientation) {
+            public void onRecordingStart(CameraImplementation cameraController, String path, CameraState.Orientation videoOrientation, CameraState.Orientation deviceOrientation) {
                 Map<String, Object> result = new HashMap<>();
                 result.put("videoOrientation", videoOrientation);
                 result.put("deviceOrientation", deviceOrientation);
@@ -100,7 +100,7 @@ public class RNCameraController extends CameraImplementation implements Activity
             }
 
             @Override
-            public void onVideoRecorded(CameraImplementation cameraController, String path, int videoOrientation, int deviceOrientation) {
+            public void onVideoRecorded(CameraImplementation cameraController, String path, CameraState.Orientation videoOrientation, CameraState.Orientation deviceOrientation) {
                 if (mVideoRecordedPromise != null) {
                     if (path != null) {
                         Map<String, Object> result = new HashMap<>();
@@ -119,7 +119,7 @@ public class RNCameraController extends CameraImplementation implements Activity
             }
 
             @Override
-            public void onFramePreview(CameraImplementation cameraController, byte[] data, int width, int height, int rotation) {
+            public void onFramePreview(CameraImplementation cameraController, byte[] data, int width, int height, CameraState.Orientation rotation) {
             }
         });
     }
@@ -131,7 +131,7 @@ public class RNCameraController extends CameraImplementation implements Activity
             mPictureTakenDirectories.put(promise, cacheDirectory);
 
             try {
-                RNCameraController.super.takePicture(options);
+                CameraController.super.takePicture(options);
             } catch (Exception e) {
                 mPictureTakenPromises.remove(promise);
                 mPictureTakenOptions.remove(promise);
@@ -168,12 +168,12 @@ public class RNCameraController extends CameraImplementation implements Activity
                     recordAudio = !((Boolean) options.get("mute"));
                 }
 
-                int orientation = Constants.ORIENTATION_AUTO;
+                CameraState.Orientation orientation = CameraState.Orientation.ORIENTATION_AUTO;
                 if (options.containsKey("orientation")) {
-                    orientation = (Integer) options.get("orientation");
+                    orientation = (CameraState.Orientation) options.get("orientation");
                 }
 
-                if (RNCameraController.super.record(path, maxDuration * 1000, maxFileSize, recordAudio, profile, orientation, fps)) {
+                if (CameraController.super.record(path, maxDuration * 1000, maxFileSize, recordAudio, profile, orientation, fps)) {
                     mIsRecording = true;
                     mVideoRecordedPromise = promise;
                 } else {
