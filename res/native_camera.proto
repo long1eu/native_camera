@@ -5,16 +5,23 @@ option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 import "models.proto";
 
 service NativeCamera {
   rpc InitializeCamera (InitializeCameraRequest) returns (InitializeCameraResponse) {
+  }
+  rpc SetCamera (google.protobuf.StringValue) returns (CameraState) {
+  }
+  rpc SetUsingCamera2Api (google.protobuf.BoolValue) returns (CameraState) {
   }
   rpc UpdateCamera (CameraState) returns (CameraState) {
   }
   rpc AutoFocusPointOfInterest (Point) returns (google.protobuf.Empty) {
   }
   rpc ListCameras (google.protobuf.Empty) returns (ListCamerasResponse) {
+  }
+  rpc TakePicture (TakePictureRequest) returns (ListCamerasResponse) {
   }
 }
 
@@ -30,4 +37,33 @@ message InitializeCameraResponse {
 
 message ListCamerasResponse {
   repeated CameraInfo cameras = 1;
+}
+
+message TakePictureRequest {
+  string path = 1;
+  map<string, string> exif = 2;
+  // Should write exif to file
+  bool write_exif = 3;
+  // Value between 0-1
+  double quality = 4;
+  bool pause_after_capture = 5;
+  // only used on Android
+  bool fix_orientation = 6;
+  // only used on iOS
+  bool force_up_orientation = 7;
+  int32 width = 8;
+  bool mirror_image = 9;
+  bool do_not_save = 10;
+  bool return_bytes = 11;
+  CameraState.Orientation orientation = 12;
+}
+
+message TakePictureResponse {
+  CameraState.Orientation device_orientation = 1;
+  CameraState.Orientation picture_orientation = 2;
+  map<string, string> exif = 3;
+  int32 width = 4;
+  int32 height = 5;
+  string uri = 6;
+  bytes data = 7;
 }

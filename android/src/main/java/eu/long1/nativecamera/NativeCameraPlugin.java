@@ -28,6 +28,7 @@ import eu.long1.nativecamera.proto.InitializeCameraRequest;
 import eu.long1.nativecamera.proto.InitializeCameraResponse;
 import eu.long1.nativecamera.proto.ListCamerasResponse;
 import eu.long1.nativecamera.proto.Point;
+import eu.long1.nativecamera.proto.TakePictureRequest;
 import eu.long1.nativecamera.util.CameraUtil;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -64,7 +65,6 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
   @Override
-  @SuppressWarnings({"unchecked", "ConstantConditions"})
   public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
     switch (call.method) {
       case "ListCameras":
@@ -84,10 +84,15 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
           e.printStackTrace();
         }
         break;
+      case "SetCamera":
+        setCamera((String) call.arguments, result);
+        break;
+      case "SetUsingCamera2Api":
+        setUsingCamera2Api((Boolean) call.arguments, result);
+        break;
       case "UpdateCamera":
         try {
           final CameraState request = CameraState.parseFrom((byte[]) call.arguments);
-          System.out.println("UpdateCamera");
           updateCamera(request, result);
         } catch (InvalidProtocolBufferException e) {
           e.printStackTrace();
@@ -98,6 +103,14 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
           final Point request = Point.parseFrom((byte[]) call.arguments);
           controller.setAutoFocusPointOfInterest(request.getX(), request.getY());
           result.success(null);
+        } catch (InvalidProtocolBufferException e) {
+          e.printStackTrace();
+        }
+        break;
+      case "TakePicture":
+        try {
+          final TakePictureRequest request = TakePictureRequest.parseFrom((byte[]) call.arguments);
+          takePicture(request, result);
         } catch (InvalidProtocolBufferException e) {
           e.printStackTrace();
         }
@@ -118,9 +131,6 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
       case "resumePreview":
         resumePreview();
         result.success(null);
-        break;
-      case "takePicture":
-        takePicture((Map<String, Object>) call.arguments, result);
         break;
       case "record":
         record((Map<String, Object>) call.arguments, result);
@@ -218,6 +228,7 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
     controller.setZoom(cameraState.getZoom());
     controller.setAspectRatio(AspectRatio.of(cameraState.getRatio().getX(), cameraState.getRatio().getY()));
     controller.setFocusDepth(cameraState.getFocusDepth());
+    controller.setAutoFocus(cameraState.getAutoFocus());
     controller.setFlash(cameraState.getFlash());
     controller.setExposureCompensation(cameraState.getExposure());
     controller.setWhiteBalance(cameraState.getWhiteBalance());
@@ -233,23 +244,29 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
     }
   }
 
+  private void setCamera(String cameraId, MethodChannel.Result result) {
+    controller.setCameraId(cameraId);
+    final CameraState state = getCurrentState();
+    result.success(state.toByteArray());
+  }
+
+  private void setUsingCamera2Api(boolean useCamera2, MethodChannel.Result result) {
+    controller.setUsingCamera2Api(useCamera2);
+    final CameraState state = getCurrentState();
+    result.success(state.toByteArray());
+  }
+
   private void updateCamera(CameraState cameraState, MethodChannel.Result result) {
-    controller.stop();
-    controller.setUsingCamera2Api(cameraState.getUseCamera2());
     controller.setZoom(cameraState.getZoom());
+    controller.setAspectRatio(AspectRatio.of(cameraState.getRatio().getX(), cameraState.getRatio().getY()));
     controller.setFocusDepth(cameraState.getFocusDepth());
-    controller.setCameraId(cameraState.getCameraId());
+    controller.setAutoFocus(cameraState.getAutoFocus());
     controller.setFlash(cameraState.getFlash());
     controller.setExposureCompensation(cameraState.getExposure());
     controller.setWhiteBalance(cameraState.getWhiteBalance());
     controller.setPlaySoundOnCapture(cameraState.getPlaySoundOnCapture());
-
-    if (controller.start()) {
-      final CameraState state = getCurrentState();
-      result.success(state.toByteArray());
-    } else {
-      result.error("UPDATE_ERROR", "For some unknown reason the update didn't go through.", null);
-    }
+    final CameraState state = getCurrentState();
+    result.success(state.toByteArray());
   }
 
   private CameraState getCurrentState() {
@@ -305,7 +322,7 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
 
-  public void takePicture(final Map<String, Object> options, final MethodChannel.Result promise) {
+  public void takePicture(final TakePictureRequest options, final MethodChannel.Result promise) {
     try {
       final File cacheDirectory = mScopedContext.getCacheDirectory();
       if (controller.isCameraOpened()) {

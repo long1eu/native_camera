@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import eu.long1.nativecamera.proto.CameraState;
+import eu.long1.nativecamera.proto.TakePictureRequest;
 
 
 abstract class CameraViewImpl {
@@ -91,7 +92,7 @@ abstract class CameraViewImpl {
 
     abstract float getExposureCompensation();
 
-    abstract void takePicture(Map<String, Object> options);
+    abstract void takePicture(TakePictureRequest options);
 
     abstract boolean record(String path, int maxDuration, int maxFileSize,
                             boolean recordAudio, CamcorderProfile profile, CameraState.Orientation orientation, int fps);

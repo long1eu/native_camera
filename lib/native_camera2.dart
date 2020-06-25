@@ -78,8 +78,6 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void didUpdateWidget(Camera oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    print(widget.value.cameraId);
-    print(oldWidget.value.cameraId);
     if (_controller.isInitialized && widget.value != oldWidget.value) {
       _controller.update(widget.value);
     }
@@ -99,19 +97,34 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     }
 
     final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    double width = _controller.value.previewSize.width.toDouble();
+    double height = _controller.value.previewSize.height.toDouble();
+    if (isPortrait) {
+      double tmp = width;
+      width = height;
+      height = tmp;
+    }
+
+    final double ratio = _controller.value.ratio.getValue(isPortrait);
     return Container(
       color: Colors.red,
-      child: Center(
-        child: flutter.AspectRatio(
-          aspectRatio: _controller.value.ratio.getValue(isPortrait),
-          child: RotatedBox(
-            quarterTurns: isPortrait ? 0 : 1,
-            child: GestureDetector(
-              onTapUp: (TapUpDetails details) {
-                _controller.autoFocusPointOfInterest(details.globalPosition);
-              },
-              child: Texture(
-                textureId: _controller._textureId,
+      child: Container(
+        width: width,
+        height: height,
+        color: Colors.green,
+        child: Center(
+          child: flutter.AspectRatio(
+            aspectRatio: ratio,
+            child: RotatedBox(
+              quarterTurns: isPortrait ? 0 : 1,
+              child: GestureDetector(
+                onTapUp: (TapUpDetails details) {
+                  _controller.autoFocusPointOfInterest(details.globalPosition);
+                },
+                child: Texture(
+                  textureId: _controller._textureId,
+                ),
               ),
             ),
           ),
@@ -193,7 +206,6 @@ class CameraValue {
   final bool useCamera2;
 
   bool get isPortrait {
-    print(orientation);
     return orientation == p.CameraState_Orientation.ORIENTATION_UP ||
         orientation == p.CameraState_Orientation.ORIENTATION_DOWN;
   }
@@ -219,42 +231,6 @@ class CameraValue {
       previewSize: previewSize,
       supportedRatios: supportedRatios,
       supportedPreviewFps: supportedPreviewFps,
-      zoom: zoom ?? this.zoom,
-      maxZoom: maxZoom ?? this.maxZoom,
-      ratio: ratio ?? this.ratio,
-      focusDepth: focusDepth ?? this.focusDepth,
-      autoFocus: autoFocus ?? this.autoFocus,
-      flash: flash ?? this.flash,
-      exposure: exposure ?? this.exposure,
-      whiteBalance: whiteBalance ?? this.whiteBalance,
-      playSoundOnCapture: playSoundOnCapture ?? this.playSoundOnCapture,
-      useCamera2: useCamera2 ?? this.useCamera2,
-    );
-  }
-
-  CameraValue _internalCopyWith({
-    String cameraId,
-    p.CameraState_Orientation orientation,
-    p.Size previewSize,
-    List<CameraAspectRatio> supportedRatios,
-    List<p.Range> supportedPreviewFps,
-    double zoom,
-    double maxZoom,
-    CameraAspectRatio ratio,
-    double focusDepth,
-    bool autoFocus,
-    p.CameraState_Flash flash,
-    double exposure,
-    p.CameraState_WhiteBalance whiteBalance,
-    bool playSoundOnCapture,
-    bool useCamera2,
-  }) {
-    return CameraValue._(
-      cameraId: cameraId ?? this.cameraId,
-      orientation: orientation ?? this.orientation,
-      previewSize: previewSize ?? this.previewSize,
-      supportedRatios: supportedRatios ?? this.supportedRatios,
-      supportedPreviewFps: supportedPreviewFps ?? this.supportedPreviewFps,
       zoom: zoom ?? this.zoom,
       maxZoom: maxZoom ?? this.maxZoom,
       ratio: ratio ?? this.ratio,
@@ -339,19 +315,20 @@ class CameraController extends ValueNotifier<CameraValue> {
 
     final p.InitializeCameraResponse result = await NativeCamera.instance.initialize(
       channelName: channelName,
-      cameraId: cameraId,
-      zoom: zoom,
-      maxZoom: maxZoom,
-      ratio: p.CameraAspectRatio()
-        ..x = ratio.x
-        ..y = ratio.y,
-      focusDepth: focusDepth,
-      autoFocus: autoFocus,
-      flash: flash,
-      exposure: exposure,
-      whiteBalance: whiteBalance,
-      playSoundOnCapture: playSoundOnCapture,
-      useCamera2: useCamera2,
+      state: p.CameraState()
+        ..cameraId = cameraId
+        ..zoom = zoom
+        ..maxZoom = maxZoom
+        ..ratio = (p.CameraAspectRatio()
+          ..x = ratio.x
+          ..y = ratio.y)
+        ..focusDepth = focusDepth
+        ..autoFocus = autoFocus
+        ..flash = flash
+        ..exposure = exposure
+        ..whiteBalance = whiteBalance
+        ..playSoundOnCapture = playSoundOnCapture
+        ..useCamera2 = useCamera2,
     );
 
     final int textureId = result.textureId.toInt();
@@ -359,7 +336,7 @@ class CameraController extends ValueNotifier<CameraValue> {
     _textureId = textureId;
     _channelName = channelName;
 
-    value = value._internalCopyWith(
+    value = CameraValue._(
       cameraId: cameraId,
       orientation: state.orientation,
       previewSize: state.previewSize,
@@ -376,11 +353,11 @@ class CameraController extends ValueNotifier<CameraValue> {
       playSoundOnCapture: state.playSoundOnCapture,
       useCamera2: state.useCamera2,
     );
+    print('this.value.initialize: ${this.value.supportedRatios}');
     return result;
   }
 
   Future<void> update(CameraValue value) async {
-    print('update: $value');
     final p.CameraState newState = p.CameraState()
       ..cameraId = value.cameraId
       ..zoom = value.zoom
@@ -396,8 +373,20 @@ class CameraController extends ValueNotifier<CameraValue> {
       ..playSoundOnCapture = value.playSoundOnCapture
       ..useCamera2 = value.useCamera2;
 
-    final p.CameraState result = await NativeCamera.instance.update(newState);
-    this.value = value._internalCopyWith(
+    p.CameraState result;
+    bool cameraChange = this.value.cameraId != value.cameraId;
+    bool implementationChange = this.value.useCamera2 != value.useCamera2;
+
+    if (cameraChange) {
+      await NativeCamera.instance.setCamera(value.cameraId);
+    }
+
+    if (implementationChange) {
+      await NativeCamera.instance.setCamera(value.cameraId);
+    }
+
+    result = await NativeCamera.instance.update(newState);
+    this.value = CameraValue._(
       cameraId: result.cameraId,
       orientation: result.orientation,
       previewSize: result.previewSize,
@@ -424,6 +413,38 @@ class CameraController extends ValueNotifier<CameraValue> {
     final double y = physicalSize.height * offset.dy / logicalSize.height;
 
     return NativeCamera.instance.autoFocusPointOfInterest(x, y);
+  }
+
+  Future<p.TakePictureResponse> takePicture({
+    String path,
+    Map<String, String> exif = const <String, String>{},
+    bool writeExif = true,
+    double quality = .85,
+    bool pauseAfterCapture = false,
+    // only used on Android
+    bool fixOrientation = true,
+    // only used on iOS
+    bool forceUpOrientation = true,
+    int width,
+    bool mirrorImage = false,
+    bool doNotSave = false,
+    bool returnBytes = false,
+    p.CameraState_Orientation orientation = p.CameraState_Orientation.ORIENTATION_AUTO,
+  }) async {
+    return NativeCamera.instance.takePicture(
+      path: path,
+      exif: exif,
+      writeExif: writeExif,
+      quality: quality,
+      pauseAfterCapture: pauseAfterCapture,
+      fixOrientation: fixOrientation,
+      forceUpOrientation: forceUpOrientation,
+      width: width,
+      mirrorImage: mirrorImage,
+      doNotSave: doNotSave,
+      returnBytes: returnBytes,
+      orientation: orientation,
+    );
   }
 
   void _onEvent(event) {
@@ -458,47 +479,24 @@ class NativeCamera {
   /// If not, this method will throw.
   Future<p.InitializeCameraResponse> initialize({
     @required String channelName,
-    @required String cameraId,
-    @required double zoom,
-    @required double maxZoom,
-    @required p.CameraAspectRatio ratio,
-    @required double focusDepth,
-    @required bool autoFocus,
-    @required p.CameraState_Flash flash,
-    @required double exposure,
-    @required p.CameraState_WhiteBalance whiteBalance,
-    @required bool playSoundOnCapture,
-    @required bool useCamera2,
+    @required p.CameraState state,
   }) async {
-    assert(channelName != null);
-    assert(zoom != null);
-    assert(maxZoom != null);
-    assert(ratio != null);
-    assert(focusDepth != null);
-    assert(autoFocus != null);
-    assert(flash != null);
-    assert(exposure != null);
-    assert(whiteBalance != null);
-    assert(playSoundOnCapture != null);
-    assert(useCamera2 != null);
-
     p.InitializeCameraRequest request = p.InitializeCameraRequest()
       ..channelName = channelName
-      ..state = (p.CameraState()
-        ..cameraId = cameraId
-        ..zoom = zoom
-        ..maxZoom = maxZoom
-        ..ratio = ratio
-        ..focusDepth = focusDepth
-        ..autoFocus = autoFocus
-        ..flash = flash
-        ..exposure = exposure
-        ..whiteBalance = whiteBalance
-        ..playSoundOnCapture = playSoundOnCapture
-        ..useCamera2 = useCamera2);
+      ..state = state;
 
     final Uint8List data = await _channel.invokeMethod('InitializeCamera', request.writeToBuffer());
     return p.InitializeCameraResponse.fromBuffer(data);
+  }
+
+  Future<p.CameraState> setCamera(String cameraId) async {
+    final Uint8List data = await _channel.invokeMethod('SetCamera', cameraId);
+    return p.CameraState.fromBuffer(data);
+  }
+
+  Future<p.CameraState> setUsingCamera2Api(bool useCamera2Api) async {
+    final Uint8List data = await _channel.invokeMethod('SetUsingCamera2Api', useCamera2Api);
+    return p.CameraState.fromBuffer(data);
   }
 
   Future<p.CameraState> update(p.CameraState request) async {
@@ -511,5 +509,55 @@ class NativeCamera {
       ..x = x
       ..y = y;
     return _channel.invokeMethod('AutoFocusPointOfInterest', request.writeToBuffer());
+  }
+
+  Future<p.TakePictureResponse> takePicture({
+    String path,
+    Map<String, String> exif = const <String, String>{},
+    bool writeExif = true,
+    double quality = .85,
+    bool pauseAfterCapture = false,
+    // only used on Android
+    bool fixOrientation = true,
+    // only used on iOS
+    bool forceUpOrientation = true,
+    int width,
+    bool mirrorImage = false,
+    bool doNotSave = false,
+    bool returnBytes = false,
+    p.CameraState_Orientation orientation = p.CameraState_Orientation.ORIENTATION_AUTO,
+  }) async {
+    assert(exif != null);
+    assert(writeExif != null);
+    assert(quality != null && quality > 0 && quality <= 1.0);
+    assert(pauseAfterCapture != null);
+    assert(fixOrientation != null);
+    assert(forceUpOrientation != null);
+    assert(mirrorImage != null);
+    assert(doNotSave != null);
+    assert(returnBytes != null);
+    assert(orientation != null);
+
+    p.TakePictureRequest request = p.TakePictureRequest()
+      ..exif.addAll(exif)
+      ..writeExif = writeExif
+      ..quality = quality
+      ..pauseAfterCapture = pauseAfterCapture
+      ..fixOrientation = fixOrientation
+      ..forceUpOrientation = forceUpOrientation
+      ..mirrorImage = mirrorImage
+      ..doNotSave = doNotSave
+      ..returnBytes = returnBytes
+      ..orientation = orientation;
+
+    if (path != null) {
+      request.path = path;
+    }
+    if (width != null) {
+      request.width = width;
+    }
+
+    final Uint8List data = await _channel.invokeMethod('TakePicture', request.writeToBuffer());
+    return p.TakePictureResponse.fromBuffer(data);
   }
 }

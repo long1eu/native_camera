@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import eu.long1.nativecamera.proto.CameraState;
+import eu.long1.nativecamera.proto.TakePictureRequest;
 
 public class CameraImplementation {
 
@@ -370,7 +371,7 @@ public class CameraImplementation {
    * Take a picture. The result will be returned to
    * {@link Callback#onPictureTaken(CameraImplementation, byte[], CameraState.Orientation)}.
    */
-  public void takePicture(Map<String, Object> options) {
+  public void takePicture(TakePictureRequest options) {
     mImpl.takePicture(options);
   }
 

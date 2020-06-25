@@ -27,6 +27,8 @@
 // We don't use [Foo class] because it is not a static value.
 GPBObjCClassDeclaration(CameraInfo);
 GPBObjCClassDeclaration(CameraState);
+GPBObjCClassDeclaration(TakePictureRequest);
+GPBObjCClassDeclaration(TakePictureResponse);
 
 #pragma mark - NativeCameraRoot
 
@@ -212,6 +214,312 @@ typedef struct ListCamerasResponse__storage_ {
 }
 
 @end
+
+#pragma mark - TakePictureRequest
+
+@implementation TakePictureRequest
+
+@dynamic path;
+@dynamic exif, exif_Count;
+@dynamic writeExif;
+@dynamic quality;
+@dynamic pauseAfterCapture;
+@dynamic fixOrientation;
+@dynamic forceUpOrientation;
+@dynamic width;
+@dynamic mirrorImage;
+@dynamic doNotSave;
+@dynamic returnBytes;
+@dynamic orientation;
+
+typedef struct TakePictureRequest__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t width;
+  CameraState_Orientation orientation;
+  NSString *path;
+  NSMutableDictionary *exif;
+  double quality;
+} TakePictureRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "path",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_Path,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TakePictureRequest__storage_, path),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "exif",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_Exif,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TakePictureRequest__storage_, exif),
+        .flags = GPBFieldMapKeyString,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "writeExif",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_WriteExif,
+        .hasIndex = 1,
+        .offset = 2,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "quality",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_Quality,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TakePictureRequest__storage_, quality),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeDouble,
+      },
+      {
+        .name = "pauseAfterCapture",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_PauseAfterCapture,
+        .hasIndex = 4,
+        .offset = 5,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "fixOrientation",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_FixOrientation,
+        .hasIndex = 6,
+        .offset = 7,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "forceUpOrientation",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_ForceUpOrientation,
+        .hasIndex = 8,
+        .offset = 9,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "width",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_Width,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(TakePictureRequest__storage_, width),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "mirrorImage",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_MirrorImage,
+        .hasIndex = 11,
+        .offset = 12,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "doNotSave",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_DoNotSave,
+        .hasIndex = 13,
+        .offset = 14,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "returnBytes",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureRequest_FieldNumber_ReturnBytes,
+        .hasIndex = 15,
+        .offset = 16,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "orientation",
+        .dataTypeSpecific.enumDescFunc = CameraState_Orientation_EnumDescriptor,
+        .number = TakePictureRequest_FieldNumber_Orientation,
+        .hasIndex = 17,
+        .offset = (uint32_t)offsetof(TakePictureRequest__storage_, orientation),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeEnum,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TakePictureRequest class]
+                                     rootClass:[NativeCameraRoot class]
+                                          file:NativeCameraRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TakePictureRequest__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+int32_t TakePictureRequest_Orientation_RawValue(TakePictureRequest *message) {
+  GPBDescriptor *descriptor = [TakePictureRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureRequest_FieldNumber_Orientation];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTakePictureRequest_Orientation_RawValue(TakePictureRequest *message, int32_t value) {
+  GPBDescriptor *descriptor = [TakePictureRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureRequest_FieldNumber_Orientation];
+  GPBSetMessageRawEnumField(message, field, value);
+}
+
+#pragma mark - TakePictureResponse
+
+@implementation TakePictureResponse
+
+@dynamic deviceOrientation;
+@dynamic pictureOrientation;
+@dynamic exif, exif_Count;
+@dynamic width;
+@dynamic height;
+@dynamic uri;
+@dynamic data_p;
+
+typedef struct TakePictureResponse__storage_ {
+  uint32_t _has_storage_[1];
+  CameraState_Orientation deviceOrientation;
+  CameraState_Orientation pictureOrientation;
+  int32_t width;
+  int32_t height;
+  NSMutableDictionary *exif;
+  NSString *uri;
+  NSData *data_p;
+} TakePictureResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "deviceOrientation",
+        .dataTypeSpecific.enumDescFunc = CameraState_Orientation_EnumDescriptor,
+        .number = TakePictureResponse_FieldNumber_DeviceOrientation,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, deviceOrientation),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "pictureOrientation",
+        .dataTypeSpecific.enumDescFunc = CameraState_Orientation_EnumDescriptor,
+        .number = TakePictureResponse_FieldNumber_PictureOrientation,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, pictureOrientation),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "exif",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureResponse_FieldNumber_Exif,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, exif),
+        .flags = GPBFieldMapKeyString,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "width",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureResponse_FieldNumber_Width,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, width),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "height",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureResponse_FieldNumber_Height,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, height),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "uri",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureResponse_FieldNumber_Uri,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, uri),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "data_p",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TakePictureResponse_FieldNumber_Data_p,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(TakePictureResponse__storage_, data_p),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeBytes,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TakePictureResponse class]
+                                     rootClass:[NativeCameraRoot class]
+                                          file:NativeCameraRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TakePictureResponse__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+int32_t TakePictureResponse_DeviceOrientation_RawValue(TakePictureResponse *message) {
+  GPBDescriptor *descriptor = [TakePictureResponse descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureResponse_FieldNumber_DeviceOrientation];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTakePictureResponse_DeviceOrientation_RawValue(TakePictureResponse *message, int32_t value) {
+  GPBDescriptor *descriptor = [TakePictureResponse descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureResponse_FieldNumber_DeviceOrientation];
+  GPBSetMessageRawEnumField(message, field, value);
+}
+
+int32_t TakePictureResponse_PictureOrientation_RawValue(TakePictureResponse *message) {
+  GPBDescriptor *descriptor = [TakePictureResponse descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureResponse_FieldNumber_PictureOrientation];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTakePictureResponse_PictureOrientation_RawValue(TakePictureResponse *message, int32_t value) {
+  GPBDescriptor *descriptor = [TakePictureResponse descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TakePictureResponse_FieldNumber_PictureOrientation];
+  GPBSetMessageRawEnumField(message, field, value);
+}
 
 
 #pragma clang diagnostic pop

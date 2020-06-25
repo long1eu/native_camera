@@ -27,6 +27,7 @@ class _CameraExampleAppState extends State<CameraExampleApp>
   int cameraIndex;
   CameraState_Flash flash = CameraState_Flash.FLASH_AUTO;
   CameraAspectRatio ratio = CameraAspectRatio(16, 9);
+  File lastImage;
 
   @override
   Future<void> onPermissionGranted() async {
@@ -38,6 +39,7 @@ class _CameraExampleAppState extends State<CameraExampleApp>
   }
 
   void _onChanged() {
+    print(controller.value.supportedRatios);
     setState(() {
       // changes to the values of the camera controller
     });
@@ -104,6 +106,7 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                     return permissionMessage;
                   }
 
+                  final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
                   return Container(
                     constraints: BoxConstraints.expand(),
                     child: Stack(
@@ -117,44 +120,105 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                               autoFocus: true,
                             ),
                             onCameraReady: (CameraController controller) {
-                              this.controller = controller;
-                              controller.addListener(_onChanged);
+                              setState(() {
+                                this.controller = controller;
+                                controller.addListener(_onChanged);
+                              });
                             },
                           ),
-                        Container(
-                          alignment: AlignmentDirectional.topStart,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  getCameraIcon(),
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  setState(() => cameraIndex = nextCamera);
-                                },
-                              ),
-                              ...CameraState_Flash.values
-                                  // red eye is only available on Android
-                                  .where((element) => Platform.isIOS || element != CameraState_Flash.FLASH_RED_EYE)
-                                  .map((CameraState_Flash flash) {
-                                return IconButton(
+                        if (controller != null) ...<Widget>[
+                          Container(
+                            alignment: AlignmentDirectional.topStart,
+                            child: Row(
+                              children: [
+                                IconButton(
                                   icon: Icon(
-                                    getFlashIcon(flash),
-                                    color: this.flash == flash ? Theme.of(context).primaryColor : Colors.white,
+                                    getCameraIcon(),
+                                    color: Colors.white,
                                   ),
                                   onPressed: () {
-                                    setState(() => this.flash = flash);
+                                    setState(() => cameraIndex = nextCamera);
                                   },
-                                );
-                              }),
-                            ],
+                                ),
+                                ...CameraState_Flash.values
+                                    // red eye is only available on Android
+                                    .where((element) => Platform.isIOS || element != CameraState_Flash.FLASH_RED_EYE)
+                                    .map((CameraState_Flash flash) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      getFlashIcon(flash),
+                                      color: this.flash == flash ? Theme.of(context).primaryColor : Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      setState(() => this.flash = flash);
+                                    },
+                                  );
+                                }),
+                              ],
+                            ),
                           ),
-                        ),
-                        if (controller != null)
+                          Container(
+                            padding: EdgeInsetsDirectional.only(
+                              bottom: isPortrait ? 64.0 : 0.0,
+                              start: isPortrait ? 0.0 : 32.0,
+                            ),
+                            child: Flex(
+                              direction: isPortrait ? Axis.horizontal : Axis.vertical,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Spacer(),
+                                Expanded(
+                                  child: Container(
+                                    alignment: isPortrait
+                                        ? AlignmentDirectional.bottomCenter
+                                        : AlignmentDirectional.centerStart,
+                                    child: SizedBox(
+                                      width: 64.0,
+                                      height: 64.0,
+                                      child: Material(
+                                        elevation: 6.0,
+                                        shape: const CircleBorder(),
+                                        child: InkWell(
+                                          customBorder: const CircleBorder(),
+                                          onTap: () async {
+                                            final TakePictureResponse result = await controller.takePicture();
+                                            setState(() => lastImage = File.fromUri(Uri.parse(result.uri)));
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment:
+                                        isPortrait ? AlignmentDirectional.bottomEnd : AlignmentDirectional.centerEnd,
+                                    padding: EdgeInsetsDirectional.only(end: 16.0),
+                                    child: Container(
+                                      width: 64.0,
+                                      height: 64.0,
+                                      color: Colors.grey.shade900,
+                                      child: lastImage != null
+                                          ? Image.file(
+                                              lastImage,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Icon(
+                                              Icons.photo,
+                                              color: Colors.white,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Container(
                             alignment: AlignmentDirectional.bottomStart,
                             child: Wrap(
+                              alignment: WrapAlignment.center,
+                              runAlignment: WrapAlignment.center,
                               children: [
                                 ...controller.value.supportedRatios.map((CameraAspectRatio ratio) {
                                   return IconButton(
@@ -172,6 +236,7 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                               ],
                             ),
                           ),
+                        ],
                       ],
                     ),
                   );

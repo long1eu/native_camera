@@ -17,6 +17,7 @@ protoc --dart_out=lib/src/protos/ \
        --proto_path=res/ \
        models.proto \
        google/protobuf/empty.proto \
+       google/protobuf/wrappers.proto \
        native_camera.proto
 
 dart res/generate_imports.dart

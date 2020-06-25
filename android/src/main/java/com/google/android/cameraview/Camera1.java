@@ -42,9 +42,9 @@ import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.long1.nativecamera.proto.CameraState;
+import eu.long1.nativecamera.proto.TakePictureRequest;
 
 
-@SuppressWarnings("deprecation")
 class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
     MediaRecorder.OnErrorListener, Camera.PreviewCallback {
 
@@ -624,7 +624,7 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
   }
 
   @Override
-  void takePicture(final Map<String, Object> options) {
+  void takePicture(final TakePictureRequest options) {
     if (!isCameraOpened()) {
       throw new IllegalStateException(
           "Camera is not ready. Call start() before takePicture().");
@@ -669,14 +669,13 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
     }
   }
 
-  @SuppressWarnings("ConstantConditions")
-  void takePictureInternal(final Map<String, Object> options) {
+  void takePictureInternal(final TakePictureRequest options) {
     // if not capturing already, atomically set it to true
     if (!mIsRecording.get() && isPictureCaptureInProgress.compareAndSet(false, true)) {
 
       try {
-        if (options.containsKey("orientation") && ((Integer) options.get("orientation")) != Constants.ORIENTATION_AUTO) {
-          mOrientation = (CameraState.Orientation) options.get("orientation");
+        if (options.getOrientation() != CameraState.Orientation.ORIENTATION_AUTO) {
+          mOrientation = options.getOrientation();
           int rotation = orientationEnumToRotation(mOrientation);
           mCameraParameters.setRotation(calcCameraRotation(rotation));
           try {
@@ -688,8 +687,8 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
 
         // set quality on capture since we might not process the image bitmap if not needed now.
         // This also achieves a much faster JPEG compression speed since it's done on the hardware
-        if (options.containsKey("quality")) {
-          mCameraParameters.setJpegQuality((int) (((Double) options.get("quality")) * 100));
+        if (options.getQuality() != 0) {
+          mCameraParameters.setJpegQuality((int) (options.getQuality() * 100));
           try {
             mCamera.setParameters(mCameraParameters);
           } catch (RuntimeException e) {
@@ -697,44 +696,41 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
           }
         }
 
-        mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
-          @Override
-          public void onPictureTaken(byte[] data, Camera camera) {
+        mCamera.takePicture(null, null, null, (data, camera) -> {
 
-            // this shouldn't be needed and messes up autoFocusPointOfInterest
-            // camera.cancelAutoFocus();
+          // this shouldn't be needed and messes up autoFocusPointOfInterest
+          // camera.cancelAutoFocus();
 
-            if (mPlaySoundOnCapture) {
-              sound.play(MediaActionSound.SHUTTER_CLICK);
-            }
+          if (mPlaySoundOnCapture) {
+            sound.play(MediaActionSound.SHUTTER_CLICK);
+          }
 
-            // our camera might have been released
-            // when this callback fires, so make sure we have
-            // exclusive access when restoring its preview
-            synchronized (Camera1.this) {
-              if (mCamera != null) {
-                if (options.containsKey("pauseAfterCapture") && !((Boolean) options.get("pauseAfterCapture"))) {
-                  mCamera.startPreview();
-                  mIsPreviewActive = true;
-                  if (mIsScanning) {
-                    mCamera.setPreviewCallback(Camera1.this);
-                  }
-                } else {
-                  mCamera.stopPreview();
-                  mIsPreviewActive = false;
-                  mCamera.setPreviewCallback(null);
+          // our camera might have been released
+          // when this callback fires, so make sure we have
+          // exclusive access when restoring its preview
+          synchronized (Camera1.this) {
+            if (mCamera != null) {
+              if (!options.getPauseAfterCapture()) {
+                mCamera.startPreview();
+                mIsPreviewActive = true;
+                if (mIsScanning) {
+                  mCamera.setPreviewCallback(Camera1.this);
                 }
+              } else {
+                mCamera.stopPreview();
+                mIsPreviewActive = false;
+                mCamera.setPreviewCallback(null);
               }
             }
+          }
 
-            isPictureCaptureInProgress.set(false);
+          isPictureCaptureInProgress.set(false);
 
-            mOrientation = CameraState.Orientation.ORIENTATION_AUTO;
-            mCallback.onPictureTaken(data, displayOrientationToOrientationEnum(mDeviceOrientation));
+          mOrientation = CameraState.Orientation.ORIENTATION_AUTO;
+          mCallback.onPictureTaken(data, displayOrientationToOrientationEnum(mDeviceOrientation));
 
-            if (mustUpdateSurface) {
-              updateSurface();
-            }
+          if (mustUpdateSurface) {
+            updateSurface();
           }
         });
       } catch (Exception e) {
@@ -1177,6 +1173,7 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
    * @return True if in landscape, false if portrait
    */
   private boolean isLandscape(int orientationDegrees) {
+    System.out.println("orientationDegrees: " + orientationDegrees);
     return (orientationDegrees == Constants.LANDSCAPE_90 ||
         orientationDegrees == Constants.LANDSCAPE_270);
   }

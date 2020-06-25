@@ -1,7 +1,7 @@
 package org.reactnative.camera.tasks;
 
-import java.util.Map;
+import eu.long1.nativecamera.proto.TakePictureResponse;
 
 public interface PictureSavedDelegate {
-    void onPictureSaved(Map<String, Object> response);
+  void onPictureSaved(TakePictureResponse response);
 }

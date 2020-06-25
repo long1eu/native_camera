@@ -29,6 +29,7 @@ CF_EXTERN_C_BEGIN
 
 @class CameraInfo;
 @class CameraState;
+GPB_ENUM_FWD_DECLARE(CameraState_Orientation);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -94,6 +95,125 @@ GPB_FINAL @interface ListCamerasResponse : GPBMessage
 @property(nonatomic, readonly) NSUInteger camerasArray_Count;
 
 @end
+
+#pragma mark - TakePictureRequest
+
+typedef GPB_ENUM(TakePictureRequest_FieldNumber) {
+  TakePictureRequest_FieldNumber_Path = 1,
+  TakePictureRequest_FieldNumber_Exif = 2,
+  TakePictureRequest_FieldNumber_WriteExif = 3,
+  TakePictureRequest_FieldNumber_Quality = 4,
+  TakePictureRequest_FieldNumber_PauseAfterCapture = 5,
+  TakePictureRequest_FieldNumber_FixOrientation = 6,
+  TakePictureRequest_FieldNumber_ForceUpOrientation = 7,
+  TakePictureRequest_FieldNumber_Width = 8,
+  TakePictureRequest_FieldNumber_MirrorImage = 9,
+  TakePictureRequest_FieldNumber_DoNotSave = 10,
+  TakePictureRequest_FieldNumber_ReturnBytes = 11,
+  TakePictureRequest_FieldNumber_Orientation = 12,
+};
+
+GPB_FINAL @interface TakePictureRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *path;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *exif;
+/** The number of items in @c exif without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger exif_Count;
+
+/** Should write exif to file */
+@property(nonatomic, readwrite) BOOL writeExif;
+
+/** Value between 0-1 */
+@property(nonatomic, readwrite) double quality;
+
+@property(nonatomic, readwrite) BOOL pauseAfterCapture;
+
+/** only used on Android */
+@property(nonatomic, readwrite) BOOL fixOrientation;
+
+/** only used on iOS */
+@property(nonatomic, readwrite) BOOL forceUpOrientation;
+
+@property(nonatomic, readwrite) int32_t width;
+
+@property(nonatomic, readwrite) BOOL mirrorImage;
+
+@property(nonatomic, readwrite) BOOL doNotSave;
+
+@property(nonatomic, readwrite) BOOL returnBytes;
+
+@property(nonatomic, readwrite) enum CameraState_Orientation orientation;
+
+@end
+
+/**
+ * Fetches the raw value of a @c TakePictureRequest's @c orientation property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t TakePictureRequest_Orientation_RawValue(TakePictureRequest *message);
+/**
+ * Sets the raw value of an @c TakePictureRequest's @c orientation property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetTakePictureRequest_Orientation_RawValue(TakePictureRequest *message, int32_t value);
+
+#pragma mark - TakePictureResponse
+
+typedef GPB_ENUM(TakePictureResponse_FieldNumber) {
+  TakePictureResponse_FieldNumber_DeviceOrientation = 1,
+  TakePictureResponse_FieldNumber_PictureOrientation = 2,
+  TakePictureResponse_FieldNumber_Exif = 3,
+  TakePictureResponse_FieldNumber_Width = 4,
+  TakePictureResponse_FieldNumber_Height = 5,
+  TakePictureResponse_FieldNumber_Uri = 6,
+  TakePictureResponse_FieldNumber_Data_p = 7,
+};
+
+GPB_FINAL @interface TakePictureResponse : GPBMessage
+
+@property(nonatomic, readwrite) enum CameraState_Orientation deviceOrientation;
+
+@property(nonatomic, readwrite) enum CameraState_Orientation pictureOrientation;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *exif;
+/** The number of items in @c exif without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger exif_Count;
+
+@property(nonatomic, readwrite) int32_t width;
+
+@property(nonatomic, readwrite) int32_t height;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uri;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSData *data_p;
+
+@end
+
+/**
+ * Fetches the raw value of a @c TakePictureResponse's @c deviceOrientation property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t TakePictureResponse_DeviceOrientation_RawValue(TakePictureResponse *message);
+/**
+ * Sets the raw value of an @c TakePictureResponse's @c deviceOrientation property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetTakePictureResponse_DeviceOrientation_RawValue(TakePictureResponse *message, int32_t value);
+
+/**
+ * Fetches the raw value of a @c TakePictureResponse's @c pictureOrientation property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t TakePictureResponse_PictureOrientation_RawValue(TakePictureResponse *message);
+/**
+ * Sets the raw value of an @c TakePictureResponse's @c pictureOrientation property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetTakePictureResponse_PictureOrientation_RawValue(TakePictureResponse *message, int32_t value);
 
 NS_ASSUME_NONNULL_END
 

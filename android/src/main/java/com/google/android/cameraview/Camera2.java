@@ -60,6 +60,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import eu.long1.nativecamera.proto.CameraState;
+import eu.long1.nativecamera.proto.TakePictureRequest;
 
 
 @SuppressWarnings("MissingPermission")
@@ -556,7 +557,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
 
 
   @Override
-  void takePicture(Map<String, Object> options) {
+  void takePicture(TakePictureRequest options) {
     mCaptureCallback.setOptions(options);
 
     if (mAutoFocus) {
@@ -1231,8 +1232,8 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
       captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOutputRotation());
 
 
-      if (mCaptureCallback.getOptions().containsKey("quality")) {
-        int quality = (int) (((Double) mCaptureCallback.getOptions().get("quality")) * 100);
+      if (mCaptureCallback.getOptions().getQuality() != 0) {
+        int quality = (int) (mCaptureCallback.getOptions().getQuality() * 100);
         captureRequestBuilder.set(CaptureRequest.JPEG_QUALITY, (byte) quality);
       }
 
@@ -1245,8 +1246,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
             public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                            @NonNull CaptureRequest request,
                                            @NonNull TotalCaptureResult result) {
-              if (mCaptureCallback.getOptions().containsKey("pauseAfterCapture")
-                  && !((Boolean) mCaptureCallback.getOptions().get("pauseAfterCapture"))) {
+              if (!mCaptureCallback.getOptions().getPauseAfterCapture()) {
                 unlockFocus();
               }
               if (mPlaySoundOnCapture) {
@@ -1410,7 +1410,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
     static final int STATE_CAPTURING = 5;
 
     private int mState;
-    private Map<String, Object> mOptions = null;
+    private TakePictureRequest mOptions = null;
 
     PictureCaptureCallback() {
     }
@@ -1419,11 +1419,11 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
       mState = state;
     }
 
-    void setOptions(Map<String, Object> options) {
+    void setOptions(TakePictureRequest options) {
       mOptions = options;
     }
 
-    Map<String, Object> getOptions() {
+    TakePictureRequest getOptions() {
       return mOptions;
     }
 
