@@ -27,6 +27,7 @@ import eu.long1.nativecamera.proto.CameraState;
 import eu.long1.nativecamera.proto.InitializeCameraRequest;
 import eu.long1.nativecamera.proto.InitializeCameraResponse;
 import eu.long1.nativecamera.proto.ListCamerasResponse;
+import eu.long1.nativecamera.proto.Point;
 import eu.long1.nativecamera.util.CameraUtil;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -88,6 +89,15 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
           final CameraState request = CameraState.parseFrom((byte[]) call.arguments);
           System.out.println("UpdateCamera");
           updateCamera(request, result);
+        } catch (InvalidProtocolBufferException e) {
+          e.printStackTrace();
+        }
+        break;
+      case "AutoFocusPointOfInterest":
+        try {
+          final Point request = Point.parseFrom((byte[]) call.arguments);
+          controller.setAutoFocusPointOfInterest(request.getX(), request.getY());
+          result.success(null);
         } catch (InvalidProtocolBufferException e) {
           e.printStackTrace();
         }
@@ -155,11 +165,6 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
         float focusDepth = (float) call.arguments;
         controller.setFocusDepth(focusDepth);
         break;
-      case "autoFocusPointOfInterest":
-        float x = call.argument("x");
-        float y = call.argument("y");
-        controller.setAutoFocusPointOfInterest(x, y);
-        break;
       case "zoom":
         float zoom = (float) call.arguments;
         controller.setZoom(zoom);
@@ -218,49 +223,11 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
     controller.setWhiteBalance(cameraState.getWhiteBalance());
     controller.setPlaySoundOnCapture(cameraState.getPlaySoundOnCapture());
     if (controller.start()) {
-      final InitializeCameraResponse.Builder response = InitializeCameraResponse.newBuilder();
-      response.setTextureId(flutterSurfaceTexture.id());
-      // response.setState;
-
-      response.setOrientation(controller.getCameraOrientation());
-
-      final Size size = controller.getPreviewSize();
-      response.setPreviewSize(eu.long1.nativecamera.proto.Size.newBuilder().setWidth(size.getWidth()).setHeight(size.getHeight()));
-
-      for (AspectRatio ratio : controller.getSupportedAspectRatios()) {
-        eu.long1.nativecamera.proto.AspectRatio proto = eu.long1.nativecamera.proto.AspectRatio.newBuilder()
-            .setX(ratio.getX())
-            .setY(ratio.getY())
-            .build();
-        response.addSupportedRatio(proto);
-      }
-
-      for (int[] range : controller.getSupportedPreviewFpsRange()) {
-        eu.long1.nativecamera.proto.Range proto = eu.long1.nativecamera.proto.Range.newBuilder()
-            .setMax(range[0])
-            .setMin(range[1])
-            .build();
-        response.addSupportedPreviewFps(proto);
-      }
-
-      final AspectRatio aspectRatio = controller.getAspectRatio();
-      final CameraState state = CameraState.newBuilder()
-          .setZoom(controller.getZoom())
-          .setRatio(eu.long1.nativecamera.proto.AspectRatio.newBuilder()
-              .setX(aspectRatio.getX())
-              .setY(aspectRatio.getY()))
-          .setFocusDepth(controller.getFocusDepth())
-          .setCameraId(controller.getCameraId())
-          .setAutoFocus(controller.getAutoFocus())
-          .setFlash(controller.getFlash())
-          .setExposure(controller.getExposureCompensation())
-          .setWhiteBalance(controller.getWhiteBalance())
-          .setPlaySoundOnCapture(controller.getPlaySoundOnCapture())
-          .setUseCamera2(controller.getUsingCamera2Api())
+      final InitializeCameraResponse response = InitializeCameraResponse.newBuilder()
+          .setTextureId(flutterSurfaceTexture.id())
+          .setState(getCurrentState())
           .build();
-      response.setState(state);
-
-      result.success(response.build().toByteArray());
+      result.success(response.toByteArray());
     } else {
       result.error("CAMERA_START_ERROR", "Unable to start the camera", null);
     }
@@ -269,10 +236,7 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
   private void updateCamera(CameraState cameraState, MethodChannel.Result result) {
     controller.stop();
     controller.setUsingCamera2Api(cameraState.getUseCamera2());
-
-    System.out.println("cameraState.getCameraId(): " + cameraState.getCameraId());
     controller.setZoom(cameraState.getZoom());
-    System.out.println("controller.setAspectRatio(AspectRatio.of(cameraState.getRatio().getX(), cameraState.getRatio().getY())): " + controller.setAspectRatio(AspectRatio.of(cameraState.getRatio().getX(), cameraState.getRatio().getY())));
     controller.setFocusDepth(cameraState.getFocusDepth());
     controller.setCameraId(cameraState.getCameraId());
     controller.setFlash(cameraState.getFlash());
@@ -281,25 +245,50 @@ public class NativeCameraPlugin implements FlutterPlugin, MethodCallHandler {
     controller.setPlaySoundOnCapture(cameraState.getPlaySoundOnCapture());
 
     if (controller.start()) {
-      final AspectRatio aspectRatio = controller.getAspectRatio();
-      final CameraState state = CameraState.newBuilder()
-          .setZoom(controller.getZoom())
-          .setRatio(eu.long1.nativecamera.proto.AspectRatio.newBuilder()
-              .setX(aspectRatio.getX())
-              .setY(aspectRatio.getY()))
-          .setFocusDepth(controller.getFocusDepth())
-          .setCameraId(controller.getCameraId())
-          .setAutoFocus(controller.getAutoFocus())
-          .setFlash(controller.getFlash())
-          .setExposure(controller.getExposureCompensation())
-          .setWhiteBalance(controller.getWhiteBalance())
-          .setPlaySoundOnCapture(controller.getPlaySoundOnCapture())
-          .setUseCamera2(controller.getUsingCamera2Api())
-          .build();
+      final CameraState state = getCurrentState();
       result.success(state.toByteArray());
     } else {
       result.error("UPDATE_ERROR", "For some unknown reason the update didn't go through.", null);
     }
+  }
+
+  private CameraState getCurrentState() {
+    final Size size = controller.getPreviewSize();
+    final AspectRatio aspectRatio = controller.getAspectRatio();
+    final CameraState.Builder state = CameraState.newBuilder()
+        .setOrientation(controller.getCameraOrientation())
+        .setPreviewSize(eu.long1.nativecamera.proto.Size.newBuilder()
+            .setWidth(size.getWidth())
+            .setHeight(size.getHeight()))
+        .setZoom(controller.getZoom())
+        .setRatio(eu.long1.nativecamera.proto.CameraAspectRatio.newBuilder()
+            .setX(aspectRatio.getX())
+            .setY(aspectRatio.getY()))
+        .setFocusDepth(controller.getFocusDepth())
+        .setCameraId(controller.getCameraId())
+        .setAutoFocus(controller.getAutoFocus())
+        .setFlash(controller.getFlash())
+        .setExposure(controller.getExposureCompensation())
+        .setWhiteBalance(controller.getWhiteBalance())
+        .setPlaySoundOnCapture(controller.getPlaySoundOnCapture())
+        .setUseCamera2(controller.getUsingCamera2Api());
+
+    for (AspectRatio ratio : controller.getSupportedAspectRatios()) {
+      eu.long1.nativecamera.proto.CameraAspectRatio proto = eu.long1.nativecamera.proto.CameraAspectRatio.newBuilder()
+          .setX(ratio.getX())
+          .setY(ratio.getY())
+          .build();
+      state.addSupportedRatio(proto);
+    }
+
+    for (int[] range : controller.getSupportedPreviewFpsRange()) {
+      eu.long1.nativecamera.proto.Range proto = eu.long1.nativecamera.proto.Range.newBuilder()
+          .setMax(range[0])
+          .setMin(range[1])
+          .build();
+      state.addSupportedPreviewFps(proto);
+    }
+    return state.build();
   }
 
   public void pausePreview() {

@@ -4,9 +4,11 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:native_camera/native_camera2.dart';
-import 'package:permission_handler/permission_handler.dart' as p;
+import 'package:native_camera_example/permission_mixin.dart';
 
 void main() => runApp(CameraExampleApp());
 
@@ -17,92 +19,73 @@ class CameraExampleApp extends StatefulWidget {
   _CameraExampleAppState createState() => _CameraExampleAppState();
 }
 
-class _CameraExampleAppState extends State<CameraExampleApp> with WidgetsBindingObserver {
+class _CameraExampleAppState extends State<CameraExampleApp>
+    with WidgetsBindingObserver, PermissionMixin<CameraExampleApp> {
   List<CameraInfo> cameras = <CameraInfo>[];
-  p.PermissionStatus status = p.PermissionStatus.denied;
-  CameraInfo camera;
-  CameraValue value;
+  CameraController controller;
+
+  int cameraIndex;
+  CameraState_Flash flash = CameraState_Flash.FLASH_AUTO;
+  CameraAspectRatio ratio = CameraAspectRatio(16, 9);
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _checkPermission();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _checkPermission();
+  Future<void> onPermissionGranted() async {
+    final List<CameraInfo> cameras = await NativeCamera.instance.getAvailableCameras();
+    this.cameras = cameras;
+    if (cameras.isNotEmpty) {
+      cameraIndex = 0;
     }
   }
 
-  Future<void> _checkPermission() async {
-    final p.PermissionStatus status = await p.Permission.camera.status;
-    if (status == p.PermissionStatus.granted) {
-      final List<CameraInfo> cameras = await NativeCamera.instance.getAvailableCameras();
-      this.cameras = cameras;
-      if (cameras.isNotEmpty) {
-        camera = cameras[0];
-      }
-    }
-
-    setState(() => this.status = status);
+  void _onChanged() {
+    setState(() {
+      // changes to the values of the camera controller
+    });
   }
 
-  Future<void> _requestPermission() async {
-    await p.Permission.camera.request();
-    _checkPermission();
-  }
-
-  Widget _getPermissionMessage() {
-    if (status == p.PermissionStatus.undetermined) {
-      return Center(
-        child: RaisedButton(
-          child: Text('Start camera'),
-          onPressed: _requestPermission,
-        ),
-      );
-    } else if (status == p.PermissionStatus.denied) {
-      return Center(
-        child: RaisedButton(
-          child: Text('Grant camera permission'),
-          onPressed: _requestPermission,
-        ),
-      );
-    } else if (status == p.PermissionStatus.restricted) {
-      return Center(
-        child: Text('You are not allowed to use the camera'),
-      );
-    } else if (status == p.PermissionStatus.permanentlyDenied) {
-      return Center(
-        child: RaisedButton(
-          child: Text('Open settings to grant camera permission'),
-          onPressed: () async {
-            await p.openAppSettings();
-          },
-        ),
-      );
-    }
-
-    return null;
-  }
-
-  String _getFacing(CameraInfo_LensFacing facing) {
-    switch (facing) {
+  IconData getCameraIcon() {
+    final CameraInfo camera = cameras[nextCamera];
+    switch (camera.facing) {
       case CameraInfo_LensFacing.FRONT:
-        return 'front';
+        return Icons.camera_front;
       case CameraInfo_LensFacing.BACK:
-        return 'back';
+        return Icons.camera_rear;
       case CameraInfo_LensFacing.EXTERNAL:
-        return 'external';
+        return Icons.insert_link;
       default:
-        throw ArgumentError('Unknown camera type.');
+        throw ArgumentError('Unknown camera source.');
+    }
+  }
+
+  IconData getFlashIcon(CameraState_Flash flash) {
+    switch (flash) {
+      case CameraState_Flash.FLASH_ON:
+        return Icons.flash_on;
+      case CameraState_Flash.FLASH_AUTO:
+        return Icons.flash_auto;
+      case CameraState_Flash.FLASH_OFF:
+        return Icons.flash_off;
+      case CameraState_Flash.FLASH_TORCH:
+        return Icons.lightbulb_outline;
+      case CameraState_Flash.FLASH_RED_EYE:
+        return Icons.remove_red_eye;
+      default:
+        throw ArgumentError('Unknown camera source.');
+    }
+  }
+
+  int get nextCamera {
+    final int maxIndex = cameras.length - 1;
+    if (cameraIndex == maxIndex) {
+      return 0;
+    } else {
+      return cameraIndex + 1;
     }
   }
 
   @override
   void dispose() {
+    controller?.dispose();
     WidgetsBinding.instance.addObserver(this);
     super.dispose();
   }
@@ -112,73 +95,88 @@ class _CameraExampleAppState extends State<CameraExampleApp> with WidgetsBinding
     return MaterialApp(
       home: Builder(
         builder: (BuildContext context) {
-          print(value);
-
-
           return Scaffold(
-            appBar: AppBar(),
-            drawer: this.value != null
-                ? Drawer(
-                    child: ListView(
-                      children: <Widget>[
-                        ExpansionTile(
-                          title: Text('Ratio'),
-                          children: value.supportedRatios.map((ratio) {
-                            return ListTile(
-                              title: Text('${ratio.x}:${ratio.y}'),
-                              onTap: () {
-                                Navigator.pop(context);
-                                setState(() => value = value.copyWith(ratio: ratio));
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  )
-                : null,
-            body: Builder(
-              builder: (BuildContext context) {
-                final Widget permissionMessage = _getPermissionMessage();
-                if (permissionMessage != null) {
-                  return permissionMessage;
-                }
+            body: SafeArea(
+              child: Builder(
+                builder: (BuildContext context) {
+                  final Widget permissionMessage = getPermissionMessage();
+                  if (permissionMessage != null) {
+                    return permissionMessage;
+                  }
 
-                return Container(
-                  constraints: BoxConstraints.expand(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: cameras.map((camera) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                            child: ChoiceChip(
-                              label: Text(_getFacing(camera.facing)),
-                              selected: this.camera == camera,
-                              onSelected: (bool selected) {
-                                if (selected) {
-                                  setState(() => this.camera = camera);
-                                }
-                              },
+                  return Container(
+                    constraints: BoxConstraints.expand(),
+                    child: Stack(
+                      children: <Widget>[
+                        if (cameraIndex != null)
+                          Camera(
+                            value: CameraValue(
+                              cameraId: cameras[cameraIndex].id,
+                              flash: flash,
+                              ratio: ratio,
+                              autoFocus: true,
                             ),
-                          );
-                        }).toList(),
-                      ),
-                      if (camera != null)
-                        Expanded(
-                          child: Camera(
-                            camera: camera,
-                            onChange: (CameraValue value) {
-                              setState(() => this.value = value);
+                            onCameraReady: (CameraController controller) {
+                              this.controller = controller;
+                              controller.addListener(_onChanged);
                             },
                           ),
+                        Container(
+                          alignment: AlignmentDirectional.topStart,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  getCameraIcon(),
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  setState(() => cameraIndex = nextCamera);
+                                },
+                              ),
+                              ...CameraState_Flash.values
+                                  // red eye is only available on Android
+                                  .where((element) => Platform.isIOS || element != CameraState_Flash.FLASH_RED_EYE)
+                                  .map((CameraState_Flash flash) {
+                                return IconButton(
+                                  icon: Icon(
+                                    getFlashIcon(flash),
+                                    color: this.flash == flash ? Theme.of(context).primaryColor : Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() => this.flash = flash);
+                                  },
+                                );
+                              }),
+                            ],
+                          ),
                         ),
-                    ],
-                  ),
-                );
-              },
+                        if (controller != null)
+                          Container(
+                            alignment: AlignmentDirectional.bottomStart,
+                            child: Wrap(
+                              children: [
+                                ...controller.value.supportedRatios.map((CameraAspectRatio ratio) {
+                                  return IconButton(
+                                    icon: Text(
+                                      '${ratio.x}:${ratio.y}',
+                                      style: TextStyle(
+                                        color: this.ratio == ratio ? Theme.of(context).primaryColor : Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() => this.ratio = ratio);
+                                    },
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           );
         },

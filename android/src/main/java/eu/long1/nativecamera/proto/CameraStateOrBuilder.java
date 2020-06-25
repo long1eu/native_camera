@@ -24,15 +24,15 @@ public interface CameraStateOrBuilder extends
   float getMaxZoom();
 
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    * @return Whether the ratio field is set.
    */
   boolean hasRatio();
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    * @return The ratio.
    */
-  eu.long1.nativecamera.proto.AspectRatio getRatio();
+  eu.long1.nativecamera.proto.CameraAspectRatio getRatio();
 
   /**
    * <code>float focus_depth = 4;</code>
@@ -101,4 +101,62 @@ public interface CameraStateOrBuilder extends
    * @return The useCamera2.
    */
   boolean getUseCamera2();
+
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @return The enum numeric value on the wire for orientation.
+   */
+  int getOrientationValue();
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @return The orientation.
+   */
+  eu.long1.nativecamera.proto.CameraState.Orientation getOrientation();
+
+  /**
+   * <code>.Size preview_size = 13;</code>
+   * @return Whether the previewSize field is set.
+   */
+  boolean hasPreviewSize();
+  /**
+   * <code>.Size preview_size = 13;</code>
+   * @return The previewSize.
+   */
+  eu.long1.nativecamera.proto.Size getPreviewSize();
+
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  java.util.List<eu.long1.nativecamera.proto.CameraAspectRatio> 
+      getSupportedRatioList();
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  eu.long1.nativecamera.proto.CameraAspectRatio getSupportedRatio(int index);
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  int getSupportedRatioCount();
+
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  java.util.List<eu.long1.nativecamera.proto.Range> 
+      getSupportedPreviewFpsList();
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  eu.long1.nativecamera.proto.Range getSupportedPreviewFps(int index);
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  int getSupportedPreviewFpsCount();
 }

@@ -28,7 +28,7 @@ const CameraState$json = const {
   '2': const [
     const {'1': 'zoom', '3': 1, '4': 1, '5': 2, '10': 'zoom'},
     const {'1': 'max_zoom', '3': 2, '4': 1, '5': 2, '10': 'maxZoom'},
-    const {'1': 'ratio', '3': 3, '4': 1, '5': 11, '6': '.AspectRatio', '10': 'ratio'},
+    const {'1': 'ratio', '3': 3, '4': 1, '5': 11, '6': '.CameraAspectRatio', '10': 'ratio'},
     const {'1': 'focus_depth', '3': 4, '4': 1, '5': 2, '10': 'focusDepth'},
     const {'1': 'camera_id', '3': 5, '4': 1, '5': 9, '10': 'cameraId'},
     const {'1': 'auto_focus', '3': 6, '4': 1, '5': 8, '10': 'autoFocus'},
@@ -37,6 +37,10 @@ const CameraState$json = const {
     const {'1': 'white_balance', '3': 9, '4': 1, '5': 14, '6': '.CameraState.WhiteBalance', '10': 'whiteBalance'},
     const {'1': 'play_sound_on_capture', '3': 10, '4': 1, '5': 8, '10': 'playSoundOnCapture'},
     const {'1': 'use_camera_2', '3': 11, '4': 1, '5': 8, '10': 'useCamera2'},
+    const {'1': 'orientation', '3': 12, '4': 1, '5': 14, '6': '.CameraState.Orientation', '10': 'orientation'},
+    const {'1': 'preview_size', '3': 13, '4': 1, '5': 11, '6': '.Size', '10': 'previewSize'},
+    const {'1': 'supported_ratio', '3': 14, '4': 3, '5': 11, '6': '.CameraAspectRatio', '10': 'supportedRatio'},
+    const {'1': 'supported_preview_fps', '3': 15, '4': 3, '5': 11, '6': '.Range', '10': 'supportedPreviewFps'},
   ],
   '4': const [CameraState_Flash$json, CameraState_Orientation$json, CameraState_VideoCodec$json, CameraState_VideoQuality$json, CameraState_VideoStabilization$json, CameraState_WhiteBalance$json],
 };
@@ -108,8 +112,8 @@ const CameraState_WhiteBalance$json = const {
   ],
 };
 
-const AspectRatio$json = const {
-  '1': 'AspectRatio',
+const CameraAspectRatio$json = const {
+  '1': 'CameraAspectRatio',
   '2': const [
     const {'1': 'x', '3': 1, '4': 1, '5': 5, '10': 'x'},
     const {'1': 'y', '3': 2, '4': 1, '5': 5, '10': 'y'},
@@ -129,6 +133,14 @@ const Range$json = const {
   '2': const [
     const {'1': 'min', '3': 1, '4': 1, '5': 5, '10': 'min'},
     const {'1': 'max', '3': 2, '4': 1, '5': 5, '10': 'max'},
+  ],
+};
+
+const Point$json = const {
+  '1': 'Point',
+  '2': const [
+    const {'1': 'x', '3': 1, '4': 1, '5': 2, '10': 'x'},
+    const {'1': 'y', '3': 2, '4': 1, '5': 2, '10': 'y'},
   ],
 };
 

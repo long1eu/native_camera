@@ -281,6 +281,7 @@ public class CameraImplementation {
    * @param flash The desired flash mode.
    */
   public void setFlash(CameraState.Flash flash) {
+    System.out.println(flash);
     mImpl.setFlash(flash);
   }
 

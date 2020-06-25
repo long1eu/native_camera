@@ -14,8 +14,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'models.pb.dart' as $0;
 import 'google/protobuf/empty.pb.dart' as $1;
 
-import 'models.pbenum.dart' as $0;
-
 class InitializeCameraRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('InitializeCameraRequest', createEmptyInstance: create)
     ..aOS(1, 'channelName')
@@ -63,10 +61,6 @@ class InitializeCameraResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('InitializeCameraResponse', createEmptyInstance: create)
     ..aInt64(1, 'textureId', protoName: 'textureId')
     ..aOM<$0.CameraState>(2, 'state', subBuilder: $0.CameraState.create)
-    ..e<$0.CameraState_Orientation>(3, 'orientation', $pb.PbFieldType.OE, defaultOrMaker: $0.CameraState_Orientation.ORIENTATION_AUTO, valueOf: $0.CameraState_Orientation.valueOf, enumValues: $0.CameraState_Orientation.values)
-    ..aOM<$0.Size>(4, 'previewSize', subBuilder: $0.Size.create)
-    ..pc<$0.AspectRatio>(5, 'supportedRatio', $pb.PbFieldType.PM, subBuilder: $0.AspectRatio.create)
-    ..pc<$0.Range>(6, 'supportedPreviewFps', $pb.PbFieldType.PM, subBuilder: $0.Range.create)
     ..hasRequiredFields = false
   ;
 
@@ -104,32 +98,6 @@ class InitializeCameraResponse extends $pb.GeneratedMessage {
   void clearState() => clearField(2);
   @$pb.TagNumber(2)
   $0.CameraState ensureState() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  $0.CameraState_Orientation get orientation => $_getN(2);
-  @$pb.TagNumber(3)
-  set orientation($0.CameraState_Orientation v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasOrientation() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearOrientation() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $0.Size get previewSize => $_getN(3);
-  @$pb.TagNumber(4)
-  set previewSize($0.Size v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasPreviewSize() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearPreviewSize() => clearField(4);
-  @$pb.TagNumber(4)
-  $0.Size ensurePreviewSize() => $_ensure(3);
-
-  @$pb.TagNumber(5)
-  $core.List<$0.AspectRatio> get supportedRatio => $_getList(4);
-
-  @$pb.TagNumber(6)
-  $core.List<$0.Range> get supportedPreviewFps => $_getList(5);
 }
 
 class ListCamerasResponse extends $pb.GeneratedMessage {
@@ -164,6 +132,14 @@ class NativeCameraApi {
   $async.Future<InitializeCameraResponse> initializeCamera($pb.ClientContext ctx, InitializeCameraRequest request) {
     var emptyResponse = InitializeCameraResponse();
     return _client.invoke<InitializeCameraResponse>(ctx, 'NativeCamera', 'InitializeCamera', request, emptyResponse);
+  }
+  $async.Future<$0.CameraState> updateCamera($pb.ClientContext ctx, $0.CameraState request) {
+    var emptyResponse = $0.CameraState();
+    return _client.invoke<$0.CameraState>(ctx, 'NativeCamera', 'UpdateCamera', request, emptyResponse);
+  }
+  $async.Future<$1.Empty> autoFocusPointOfInterest($pb.ClientContext ctx, $0.Point request) {
+    var emptyResponse = $1.Empty();
+    return _client.invoke<$1.Empty>(ctx, 'NativeCamera', 'AutoFocusPointOfInterest', request, emptyResponse);
   }
   $async.Future<ListCamerasResponse> listCameras($pb.ClientContext ctx, $1.Empty request) {
     var emptyResponse = ListCamerasResponse();

@@ -74,7 +74,7 @@ message CameraState {
 
   // Only used on iOS
   float max_zoom = 2;
-  AspectRatio ratio = 3;
+  CameraAspectRatio ratio = 3;
   float focus_depth = 4;
   string camera_id = 5;
   bool auto_focus = 6;
@@ -84,9 +84,15 @@ message CameraState {
   bool play_sound_on_capture = 10;
   // Only used on Android > 21
   bool use_camera_2 = 11;
+
+  // read only
+  CameraState.Orientation orientation = 12;
+  Size preview_size = 13;
+  repeated CameraAspectRatio supported_ratio = 14;
+  repeated Range supported_preview_fps = 15;
 }
 
-message AspectRatio {
+message CameraAspectRatio {
   int32 x = 1;
   int32 y = 2;
 }
@@ -99,4 +105,9 @@ message Size {
 message Range {
   int32 min = 1;
   int32 max = 2;
+}
+
+message Point {
+  float x = 1;
+  float y = 2;
 }

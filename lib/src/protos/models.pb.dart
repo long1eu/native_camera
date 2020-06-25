@@ -58,7 +58,7 @@ class CameraState extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CameraState', createEmptyInstance: create)
     ..a<$core.double>(1, 'zoom', $pb.PbFieldType.OF)
     ..a<$core.double>(2, 'maxZoom', $pb.PbFieldType.OF)
-    ..aOM<AspectRatio>(3, 'ratio', subBuilder: AspectRatio.create)
+    ..aOM<CameraAspectRatio>(3, 'ratio', subBuilder: CameraAspectRatio.create)
     ..a<$core.double>(4, 'focusDepth', $pb.PbFieldType.OF)
     ..aOS(5, 'cameraId')
     ..aOB(6, 'autoFocus')
@@ -67,6 +67,10 @@ class CameraState extends $pb.GeneratedMessage {
     ..e<CameraState_WhiteBalance>(9, 'whiteBalance', $pb.PbFieldType.OE, defaultOrMaker: CameraState_WhiteBalance.WHITE_BALANCE_AUTO, valueOf: CameraState_WhiteBalance.valueOf, enumValues: CameraState_WhiteBalance.values)
     ..aOB(10, 'playSoundOnCapture')
     ..aOB(11, 'useCamera2', protoName: 'use_camera_2')
+    ..e<CameraState_Orientation>(12, 'orientation', $pb.PbFieldType.OE, defaultOrMaker: CameraState_Orientation.ORIENTATION_AUTO, valueOf: CameraState_Orientation.valueOf, enumValues: CameraState_Orientation.values)
+    ..aOM<Size>(13, 'previewSize', subBuilder: Size.create)
+    ..pc<CameraAspectRatio>(14, 'supportedRatio', $pb.PbFieldType.PM, subBuilder: CameraAspectRatio.create)
+    ..pc<Range>(15, 'supportedPreviewFps', $pb.PbFieldType.PM, subBuilder: Range.create)
     ..hasRequiredFields = false
   ;
 
@@ -104,15 +108,15 @@ class CameraState extends $pb.GeneratedMessage {
   void clearMaxZoom() => clearField(2);
 
   @$pb.TagNumber(3)
-  AspectRatio get ratio => $_getN(2);
+  CameraAspectRatio get ratio => $_getN(2);
   @$pb.TagNumber(3)
-  set ratio(AspectRatio v) { setField(3, v); }
+  set ratio(CameraAspectRatio v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasRatio() => $_has(2);
   @$pb.TagNumber(3)
   void clearRatio() => clearField(3);
   @$pb.TagNumber(3)
-  AspectRatio ensureRatio() => $_ensure(2);
+  CameraAspectRatio ensureRatio() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.double get focusDepth => $_getN(3);
@@ -185,29 +189,55 @@ class CameraState extends $pb.GeneratedMessage {
   $core.bool hasUseCamera2() => $_has(10);
   @$pb.TagNumber(11)
   void clearUseCamera2() => clearField(11);
+
+  @$pb.TagNumber(12)
+  CameraState_Orientation get orientation => $_getN(11);
+  @$pb.TagNumber(12)
+  set orientation(CameraState_Orientation v) { setField(12, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasOrientation() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearOrientation() => clearField(12);
+
+  @$pb.TagNumber(13)
+  Size get previewSize => $_getN(12);
+  @$pb.TagNumber(13)
+  set previewSize(Size v) { setField(13, v); }
+  @$pb.TagNumber(13)
+  $core.bool hasPreviewSize() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearPreviewSize() => clearField(13);
+  @$pb.TagNumber(13)
+  Size ensurePreviewSize() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  $core.List<CameraAspectRatio> get supportedRatio => $_getList(13);
+
+  @$pb.TagNumber(15)
+  $core.List<Range> get supportedPreviewFps => $_getList(14);
 }
 
-class AspectRatio extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('AspectRatio', createEmptyInstance: create)
+class CameraAspectRatio extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CameraAspectRatio', createEmptyInstance: create)
     ..a<$core.int>(1, 'x', $pb.PbFieldType.O3)
     ..a<$core.int>(2, 'y', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
-  AspectRatio._() : super();
-  factory AspectRatio() => create();
-  factory AspectRatio.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AspectRatio.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  AspectRatio clone() => AspectRatio()..mergeFromMessage(this);
-  AspectRatio copyWith(void Function(AspectRatio) updates) => super.copyWith((message) => updates(message as AspectRatio));
+  CameraAspectRatio._() : super();
+  factory CameraAspectRatio() => create();
+  factory CameraAspectRatio.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CameraAspectRatio.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  CameraAspectRatio clone() => CameraAspectRatio()..mergeFromMessage(this);
+  CameraAspectRatio copyWith(void Function(CameraAspectRatio) updates) => super.copyWith((message) => updates(message as CameraAspectRatio));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AspectRatio create() => AspectRatio._();
-  AspectRatio createEmptyInstance() => create();
-  static $pb.PbList<AspectRatio> createRepeated() => $pb.PbList<AspectRatio>();
+  static CameraAspectRatio create() => CameraAspectRatio._();
+  CameraAspectRatio createEmptyInstance() => create();
+  static $pb.PbList<CameraAspectRatio> createRepeated() => $pb.PbList<CameraAspectRatio>();
   @$core.pragma('dart2js:noInline')
-  static AspectRatio getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AspectRatio>(create);
-  static AspectRatio _defaultInstance;
+  static CameraAspectRatio getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CameraAspectRatio>(create);
+  static CameraAspectRatio _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get x => $_getIZ(0);
@@ -308,5 +338,46 @@ class Range extends $pb.GeneratedMessage {
   $core.bool hasMax() => $_has(1);
   @$pb.TagNumber(2)
   void clearMax() => clearField(2);
+}
+
+class Point extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Point', createEmptyInstance: create)
+    ..a<$core.double>(1, 'x', $pb.PbFieldType.OF)
+    ..a<$core.double>(2, 'y', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false
+  ;
+
+  Point._() : super();
+  factory Point() => create();
+  factory Point.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Point.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Point clone() => Point()..mergeFromMessage(this);
+  Point copyWith(void Function(Point) updates) => super.copyWith((message) => updates(message as Point));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Point create() => Point._();
+  Point createEmptyInstance() => create();
+  static $pb.PbList<Point> createRepeated() => $pb.PbList<Point>();
+  @$core.pragma('dart2js:noInline')
+  static Point getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Point>(create);
+  static Point _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get x => $_getN(0);
+  @$pb.TagNumber(1)
+  set x($core.double v) { $_setFloat(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasX() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearX() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get y => $_getN(1);
+  @$pb.TagNumber(2)
+  set y($core.double v) { $_setFloat(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasY() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearY() => clearField(2);
 }
 

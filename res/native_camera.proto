@@ -12,6 +12,8 @@ service NativeCamera {
   }
   rpc UpdateCamera (CameraState) returns (CameraState) {
   }
+  rpc AutoFocusPointOfInterest (Point) returns (google.protobuf.Empty) {
+  }
   rpc ListCameras (google.protobuf.Empty) returns (ListCamerasResponse) {
   }
 }
@@ -24,10 +26,6 @@ message InitializeCameraRequest {
 message InitializeCameraResponse {
   int64 textureId = 1;
   CameraState state = 2;
-  CameraState.Orientation orientation = 3;
-  Size preview_size = 4;
-  repeated AspectRatio supported_ratio = 5;
-  repeated Range supported_preview_fps = 6;
 }
 
 message ListCamerasResponse {

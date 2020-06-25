@@ -25,11 +25,8 @@
 // Forward declarations of Objective C classes that we can use as
 // static values in struct initializers.
 // We don't use [Foo class] because it is not a static value.
-GPBObjCClassDeclaration(AspectRatio);
 GPBObjCClassDeclaration(CameraInfo);
 GPBObjCClassDeclaration(CameraState);
-GPBObjCClassDeclaration(Range);
-GPBObjCClassDeclaration(Size_Class);
 
 #pragma mark - NativeCameraRoot
 
@@ -116,18 +113,10 @@ typedef struct InitializeCameraRequest__storage_ {
 
 @dynamic textureId;
 @dynamic hasState, state;
-@dynamic orientation;
-@dynamic hasPreviewSize, previewSize;
-@dynamic supportedRatioArray, supportedRatioArray_Count;
-@dynamic supportedPreviewFpsArray, supportedPreviewFpsArray_Count;
 
 typedef struct InitializeCameraResponse__storage_ {
   uint32_t _has_storage_[1];
-  CameraState_Orientation orientation;
   CameraState *state;
-  Size_Class *previewSize;
-  NSMutableArray *supportedRatioArray;
-  NSMutableArray *supportedPreviewFpsArray;
   int64_t textureId;
 } InitializeCameraResponse__storage_;
 
@@ -155,42 +144,6 @@ typedef struct InitializeCameraResponse__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
-      {
-        .name = "orientation",
-        .dataTypeSpecific.enumDescFunc = CameraState_Orientation_EnumDescriptor,
-        .number = InitializeCameraResponse_FieldNumber_Orientation,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(InitializeCameraResponse__storage_, orientation),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeEnum,
-      },
-      {
-        .name = "previewSize",
-        .dataTypeSpecific.clazz = GPBObjCClass(Size_Class),
-        .number = InitializeCameraResponse_FieldNumber_PreviewSize,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(InitializeCameraResponse__storage_, previewSize),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "supportedRatioArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(AspectRatio),
-        .number = InitializeCameraResponse_FieldNumber_SupportedRatioArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(InitializeCameraResponse__storage_, supportedRatioArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "supportedPreviewFpsArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(Range),
-        .number = InitializeCameraResponse_FieldNumber_SupportedPreviewFpsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(InitializeCameraResponse__storage_, supportedPreviewFpsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[InitializeCameraResponse class]
@@ -214,18 +167,6 @@ typedef struct InitializeCameraResponse__storage_ {
 }
 
 @end
-
-int32_t InitializeCameraResponse_Orientation_RawValue(InitializeCameraResponse *message) {
-  GPBDescriptor *descriptor = [InitializeCameraResponse descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:InitializeCameraResponse_FieldNumber_Orientation];
-  return GPBGetMessageRawEnumField(message, field);
-}
-
-void SetInitializeCameraResponse_Orientation_RawValue(InitializeCameraResponse *message, int32_t value) {
-  GPBDescriptor *descriptor = [InitializeCameraResponse descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:InitializeCameraResponse_FieldNumber_Orientation];
-  GPBSetMessageRawEnumField(message, field, value);
-}
 
 #pragma mark - ListCamerasResponse
 

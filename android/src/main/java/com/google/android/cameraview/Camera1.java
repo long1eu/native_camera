@@ -1223,11 +1223,10 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
         mCameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         return true;
       }
-      return false;
     } else {
       mFlash = flash;
-      return false;
     }
+    return false;
   }
 
   private boolean setExposureInternal(float exposure) {

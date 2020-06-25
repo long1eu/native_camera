@@ -27,12 +27,8 @@
 
 CF_EXTERN_C_BEGIN
 
-@class AspectRatio;
 @class CameraInfo;
 @class CameraState;
-@class Range;
-@class Size_Class;
-GPB_ENUM_FWD_DECLARE(CameraState_Orientation);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -73,10 +69,6 @@ GPB_FINAL @interface InitializeCameraRequest : GPBMessage
 typedef GPB_ENUM(InitializeCameraResponse_FieldNumber) {
   InitializeCameraResponse_FieldNumber_TextureId = 1,
   InitializeCameraResponse_FieldNumber_State = 2,
-  InitializeCameraResponse_FieldNumber_Orientation = 3,
-  InitializeCameraResponse_FieldNumber_PreviewSize = 4,
-  InitializeCameraResponse_FieldNumber_SupportedRatioArray = 5,
-  InitializeCameraResponse_FieldNumber_SupportedPreviewFpsArray = 6,
 };
 
 GPB_FINAL @interface InitializeCameraResponse : GPBMessage
@@ -87,33 +79,7 @@ GPB_FINAL @interface InitializeCameraResponse : GPBMessage
 /** Test to see if @c state has been set. */
 @property(nonatomic, readwrite) BOOL hasState;
 
-@property(nonatomic, readwrite) enum CameraState_Orientation orientation;
-
-@property(nonatomic, readwrite, strong, null_resettable) Size_Class *previewSize;
-/** Test to see if @c previewSize has been set. */
-@property(nonatomic, readwrite) BOOL hasPreviewSize;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<AspectRatio*> *supportedRatioArray;
-/** The number of items in @c supportedRatioArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger supportedRatioArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Range*> *supportedPreviewFpsArray;
-/** The number of items in @c supportedPreviewFpsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger supportedPreviewFpsArray_Count;
-
 @end
-
-/**
- * Fetches the raw value of a @c InitializeCameraResponse's @c orientation property, even
- * if the value was not defined by the enum at the time the code was generated.
- **/
-int32_t InitializeCameraResponse_Orientation_RawValue(InitializeCameraResponse *message);
-/**
- * Sets the raw value of an @c InitializeCameraResponse's @c orientation property, allowing
- * it to be set to a value that was not defined by the enum at the time the code
- * was generated.
- **/
-void SetInitializeCameraResponse_Orientation_RawValue(InitializeCameraResponse *message, int32_t value);
 
 #pragma mark - ListCamerasResponse
 

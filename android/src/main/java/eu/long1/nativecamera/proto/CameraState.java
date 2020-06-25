@@ -13,6 +13,8 @@ public  final class CameraState extends
     CameraStateOrBuilder {
   private CameraState() {
     cameraId_ = "";
+    supportedRatio_ = emptyProtobufList();
+    supportedPreviewFps_ = emptyProtobufList();
   }
   /**
    * Protobuf enum {@code CameraState.Flash}
@@ -808,46 +810,46 @@ public  final class CameraState extends
   }
 
   public static final int RATIO_FIELD_NUMBER = 3;
-  private eu.long1.nativecamera.proto.AspectRatio ratio_;
+  private eu.long1.nativecamera.proto.CameraAspectRatio ratio_;
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    */
   @java.lang.Override
   public boolean hasRatio() {
     return ratio_ != null;
   }
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    */
   @java.lang.Override
-  public eu.long1.nativecamera.proto.AspectRatio getRatio() {
-    return ratio_ == null ? eu.long1.nativecamera.proto.AspectRatio.getDefaultInstance() : ratio_;
+  public eu.long1.nativecamera.proto.CameraAspectRatio getRatio() {
+    return ratio_ == null ? eu.long1.nativecamera.proto.CameraAspectRatio.getDefaultInstance() : ratio_;
   }
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    */
-  private void setRatio(eu.long1.nativecamera.proto.AspectRatio value) {
+  private void setRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
     value.getClass();
   ratio_ = value;
     
     }
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    */
   @java.lang.SuppressWarnings({"ReferenceEquality"})
-  private void mergeRatio(eu.long1.nativecamera.proto.AspectRatio value) {
+  private void mergeRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
     value.getClass();
   if (ratio_ != null &&
-        ratio_ != eu.long1.nativecamera.proto.AspectRatio.getDefaultInstance()) {
+        ratio_ != eu.long1.nativecamera.proto.CameraAspectRatio.getDefaultInstance()) {
       ratio_ =
-        eu.long1.nativecamera.proto.AspectRatio.newBuilder(ratio_).mergeFrom(value).buildPartial();
+        eu.long1.nativecamera.proto.CameraAspectRatio.newBuilder(ratio_).mergeFrom(value).buildPartial();
     } else {
       ratio_ = value;
     }
     
   }
   /**
-   * <code>.AspectRatio ratio = 3;</code>
+   * <code>.CameraAspectRatio ratio = 3;</code>
    */
   private void clearRatio() {  ratio_ = null;
     
@@ -1126,6 +1128,302 @@ public  final class CameraState extends
     useCamera2_ = false;
   }
 
+  public static final int ORIENTATION_FIELD_NUMBER = 12;
+  private int orientation_;
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @return The enum numeric value on the wire for orientation.
+   */
+  @java.lang.Override
+  public int getOrientationValue() {
+    return orientation_;
+  }
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @return The orientation.
+   */
+  @java.lang.Override
+  public eu.long1.nativecamera.proto.CameraState.Orientation getOrientation() {
+    eu.long1.nativecamera.proto.CameraState.Orientation result = eu.long1.nativecamera.proto.CameraState.Orientation.forNumber(orientation_);
+    return result == null ? eu.long1.nativecamera.proto.CameraState.Orientation.UNRECOGNIZED : result;
+  }
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @param value The enum numeric value on the wire for orientation to set.
+   */
+  private void setOrientationValue(int value) {
+      orientation_ = value;
+  }
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   * @param value The orientation to set.
+   */
+  private void setOrientation(eu.long1.nativecamera.proto.CameraState.Orientation value) {
+    orientation_ = value.getNumber();
+    
+  }
+  /**
+   * <pre>
+   * read only
+   * </pre>
+   *
+   * <code>.CameraState.Orientation orientation = 12;</code>
+   */
+  private void clearOrientation() {
+    
+    orientation_ = 0;
+  }
+
+  public static final int PREVIEW_SIZE_FIELD_NUMBER = 13;
+  private eu.long1.nativecamera.proto.Size previewSize_;
+  /**
+   * <code>.Size preview_size = 13;</code>
+   */
+  @java.lang.Override
+  public boolean hasPreviewSize() {
+    return previewSize_ != null;
+  }
+  /**
+   * <code>.Size preview_size = 13;</code>
+   */
+  @java.lang.Override
+  public eu.long1.nativecamera.proto.Size getPreviewSize() {
+    return previewSize_ == null ? eu.long1.nativecamera.proto.Size.getDefaultInstance() : previewSize_;
+  }
+  /**
+   * <code>.Size preview_size = 13;</code>
+   */
+  private void setPreviewSize(eu.long1.nativecamera.proto.Size value) {
+    value.getClass();
+  previewSize_ = value;
+    
+    }
+  /**
+   * <code>.Size preview_size = 13;</code>
+   */
+  @java.lang.SuppressWarnings({"ReferenceEquality"})
+  private void mergePreviewSize(eu.long1.nativecamera.proto.Size value) {
+    value.getClass();
+  if (previewSize_ != null &&
+        previewSize_ != eu.long1.nativecamera.proto.Size.getDefaultInstance()) {
+      previewSize_ =
+        eu.long1.nativecamera.proto.Size.newBuilder(previewSize_).mergeFrom(value).buildPartial();
+    } else {
+      previewSize_ = value;
+    }
+    
+  }
+  /**
+   * <code>.Size preview_size = 13;</code>
+   */
+  private void clearPreviewSize() {  previewSize_ = null;
+    
+  }
+
+  public static final int SUPPORTED_RATIO_FIELD_NUMBER = 14;
+  private com.google.protobuf.Internal.ProtobufList<eu.long1.nativecamera.proto.CameraAspectRatio> supportedRatio_;
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  @java.lang.Override
+  public java.util.List<eu.long1.nativecamera.proto.CameraAspectRatio> getSupportedRatioList() {
+    return supportedRatio_;
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  public java.util.List<? extends eu.long1.nativecamera.proto.CameraAspectRatioOrBuilder> 
+      getSupportedRatioOrBuilderList() {
+    return supportedRatio_;
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  @java.lang.Override
+  public int getSupportedRatioCount() {
+    return supportedRatio_.size();
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  @java.lang.Override
+  public eu.long1.nativecamera.proto.CameraAspectRatio getSupportedRatio(int index) {
+    return supportedRatio_.get(index);
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  public eu.long1.nativecamera.proto.CameraAspectRatioOrBuilder getSupportedRatioOrBuilder(
+      int index) {
+    return supportedRatio_.get(index);
+  }
+  private void ensureSupportedRatioIsMutable() {
+    com.google.protobuf.Internal.ProtobufList<eu.long1.nativecamera.proto.CameraAspectRatio> tmp = supportedRatio_;
+    if (!tmp.isModifiable()) {
+      supportedRatio_ =
+          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+     }
+  }
+
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void setSupportedRatio(
+      int index, eu.long1.nativecamera.proto.CameraAspectRatio value) {
+    value.getClass();
+  ensureSupportedRatioIsMutable();
+    supportedRatio_.set(index, value);
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void addSupportedRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
+    value.getClass();
+  ensureSupportedRatioIsMutable();
+    supportedRatio_.add(value);
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void addSupportedRatio(
+      int index, eu.long1.nativecamera.proto.CameraAspectRatio value) {
+    value.getClass();
+  ensureSupportedRatioIsMutable();
+    supportedRatio_.add(index, value);
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void addAllSupportedRatio(
+      java.lang.Iterable<? extends eu.long1.nativecamera.proto.CameraAspectRatio> values) {
+    ensureSupportedRatioIsMutable();
+    com.google.protobuf.AbstractMessageLite.addAll(
+        values, supportedRatio_);
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void clearSupportedRatio() {
+    supportedRatio_ = emptyProtobufList();
+  }
+  /**
+   * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+   */
+  private void removeSupportedRatio(int index) {
+    ensureSupportedRatioIsMutable();
+    supportedRatio_.remove(index);
+  }
+
+  public static final int SUPPORTED_PREVIEW_FPS_FIELD_NUMBER = 15;
+  private com.google.protobuf.Internal.ProtobufList<eu.long1.nativecamera.proto.Range> supportedPreviewFps_;
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  @java.lang.Override
+  public java.util.List<eu.long1.nativecamera.proto.Range> getSupportedPreviewFpsList() {
+    return supportedPreviewFps_;
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  public java.util.List<? extends eu.long1.nativecamera.proto.RangeOrBuilder> 
+      getSupportedPreviewFpsOrBuilderList() {
+    return supportedPreviewFps_;
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  @java.lang.Override
+  public int getSupportedPreviewFpsCount() {
+    return supportedPreviewFps_.size();
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  @java.lang.Override
+  public eu.long1.nativecamera.proto.Range getSupportedPreviewFps(int index) {
+    return supportedPreviewFps_.get(index);
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  public eu.long1.nativecamera.proto.RangeOrBuilder getSupportedPreviewFpsOrBuilder(
+      int index) {
+    return supportedPreviewFps_.get(index);
+  }
+  private void ensureSupportedPreviewFpsIsMutable() {
+    com.google.protobuf.Internal.ProtobufList<eu.long1.nativecamera.proto.Range> tmp = supportedPreviewFps_;
+    if (!tmp.isModifiable()) {
+      supportedPreviewFps_ =
+          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+     }
+  }
+
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void setSupportedPreviewFps(
+      int index, eu.long1.nativecamera.proto.Range value) {
+    value.getClass();
+  ensureSupportedPreviewFpsIsMutable();
+    supportedPreviewFps_.set(index, value);
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void addSupportedPreviewFps(eu.long1.nativecamera.proto.Range value) {
+    value.getClass();
+  ensureSupportedPreviewFpsIsMutable();
+    supportedPreviewFps_.add(value);
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void addSupportedPreviewFps(
+      int index, eu.long1.nativecamera.proto.Range value) {
+    value.getClass();
+  ensureSupportedPreviewFpsIsMutable();
+    supportedPreviewFps_.add(index, value);
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void addAllSupportedPreviewFps(
+      java.lang.Iterable<? extends eu.long1.nativecamera.proto.Range> values) {
+    ensureSupportedPreviewFpsIsMutable();
+    com.google.protobuf.AbstractMessageLite.addAll(
+        values, supportedPreviewFps_);
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void clearSupportedPreviewFps() {
+    supportedPreviewFps_ = emptyProtobufList();
+  }
+  /**
+   * <code>repeated .Range supported_preview_fps = 15;</code>
+   */
+  private void removeSupportedPreviewFps(int index) {
+    ensureSupportedPreviewFpsIsMutable();
+    supportedPreviewFps_.remove(index);
+  }
+
   public static eu.long1.nativecamera.proto.CameraState parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1290,46 +1588,46 @@ public  final class CameraState extends
     }
 
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
     @java.lang.Override
     public boolean hasRatio() {
       return instance.hasRatio();
     }
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
     @java.lang.Override
-    public eu.long1.nativecamera.proto.AspectRatio getRatio() {
+    public eu.long1.nativecamera.proto.CameraAspectRatio getRatio() {
       return instance.getRatio();
     }
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
-    public Builder setRatio(eu.long1.nativecamera.proto.AspectRatio value) {
+    public Builder setRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
       copyOnWrite();
       instance.setRatio(value);
       return this;
       }
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
     public Builder setRatio(
-        eu.long1.nativecamera.proto.AspectRatio.Builder builderForValue) {
+        eu.long1.nativecamera.proto.CameraAspectRatio.Builder builderForValue) {
       copyOnWrite();
       instance.setRatio(builderForValue.build());
       return this;
     }
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
-    public Builder mergeRatio(eu.long1.nativecamera.proto.AspectRatio value) {
+    public Builder mergeRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
       copyOnWrite();
       instance.mergeRatio(value);
       return this;
     }
     /**
-     * <code>.AspectRatio ratio = 3;</code>
+     * <code>.CameraAspectRatio ratio = 3;</code>
      */
     public Builder clearRatio() {  copyOnWrite();
       instance.clearRatio();
@@ -1629,6 +1927,323 @@ public  final class CameraState extends
       return this;
     }
 
+    /**
+     * <pre>
+     * read only
+     * </pre>
+     *
+     * <code>.CameraState.Orientation orientation = 12;</code>
+     * @return The enum numeric value on the wire for orientation.
+     */
+    @java.lang.Override
+    public int getOrientationValue() {
+      return instance.getOrientationValue();
+    }
+    /**
+     * <pre>
+     * read only
+     * </pre>
+     *
+     * <code>.CameraState.Orientation orientation = 12;</code>
+     * @param value The orientation to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOrientationValue(int value) {
+      copyOnWrite();
+      instance.setOrientationValue(value);
+      return this;
+    }
+    /**
+     * <pre>
+     * read only
+     * </pre>
+     *
+     * <code>.CameraState.Orientation orientation = 12;</code>
+     * @return The orientation.
+     */
+    @java.lang.Override
+    public eu.long1.nativecamera.proto.CameraState.Orientation getOrientation() {
+      return instance.getOrientation();
+    }
+    /**
+     * <pre>
+     * read only
+     * </pre>
+     *
+     * <code>.CameraState.Orientation orientation = 12;</code>
+     * @param value The enum numeric value on the wire for orientation to set.
+     * @return This builder for chaining.
+     */
+    public Builder setOrientation(eu.long1.nativecamera.proto.CameraState.Orientation value) {
+      copyOnWrite();
+      instance.setOrientation(value);
+      return this;
+    }
+    /**
+     * <pre>
+     * read only
+     * </pre>
+     *
+     * <code>.CameraState.Orientation orientation = 12;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearOrientation() {
+      copyOnWrite();
+      instance.clearOrientation();
+      return this;
+    }
+
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    @java.lang.Override
+    public boolean hasPreviewSize() {
+      return instance.hasPreviewSize();
+    }
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    @java.lang.Override
+    public eu.long1.nativecamera.proto.Size getPreviewSize() {
+      return instance.getPreviewSize();
+    }
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    public Builder setPreviewSize(eu.long1.nativecamera.proto.Size value) {
+      copyOnWrite();
+      instance.setPreviewSize(value);
+      return this;
+      }
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    public Builder setPreviewSize(
+        eu.long1.nativecamera.proto.Size.Builder builderForValue) {
+      copyOnWrite();
+      instance.setPreviewSize(builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    public Builder mergePreviewSize(eu.long1.nativecamera.proto.Size value) {
+      copyOnWrite();
+      instance.mergePreviewSize(value);
+      return this;
+    }
+    /**
+     * <code>.Size preview_size = 13;</code>
+     */
+    public Builder clearPreviewSize() {  copyOnWrite();
+      instance.clearPreviewSize();
+      return this;
+    }
+
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    @java.lang.Override
+    public java.util.List<eu.long1.nativecamera.proto.CameraAspectRatio> getSupportedRatioList() {
+      return java.util.Collections.unmodifiableList(
+          instance.getSupportedRatioList());
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    @java.lang.Override
+    public int getSupportedRatioCount() {
+      return instance.getSupportedRatioCount();
+    }/**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    @java.lang.Override
+    public eu.long1.nativecamera.proto.CameraAspectRatio getSupportedRatio(int index) {
+      return instance.getSupportedRatio(index);
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder setSupportedRatio(
+        int index, eu.long1.nativecamera.proto.CameraAspectRatio value) {
+      copyOnWrite();
+      instance.setSupportedRatio(index, value);
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder setSupportedRatio(
+        int index, eu.long1.nativecamera.proto.CameraAspectRatio.Builder builderForValue) {
+      copyOnWrite();
+      instance.setSupportedRatio(index,
+          builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder addSupportedRatio(eu.long1.nativecamera.proto.CameraAspectRatio value) {
+      copyOnWrite();
+      instance.addSupportedRatio(value);
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder addSupportedRatio(
+        int index, eu.long1.nativecamera.proto.CameraAspectRatio value) {
+      copyOnWrite();
+      instance.addSupportedRatio(index, value);
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder addSupportedRatio(
+        eu.long1.nativecamera.proto.CameraAspectRatio.Builder builderForValue) {
+      copyOnWrite();
+      instance.addSupportedRatio(builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder addSupportedRatio(
+        int index, eu.long1.nativecamera.proto.CameraAspectRatio.Builder builderForValue) {
+      copyOnWrite();
+      instance.addSupportedRatio(index,
+          builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder addAllSupportedRatio(
+        java.lang.Iterable<? extends eu.long1.nativecamera.proto.CameraAspectRatio> values) {
+      copyOnWrite();
+      instance.addAllSupportedRatio(values);
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder clearSupportedRatio() {
+      copyOnWrite();
+      instance.clearSupportedRatio();
+      return this;
+    }
+    /**
+     * <code>repeated .CameraAspectRatio supported_ratio = 14;</code>
+     */
+    public Builder removeSupportedRatio(int index) {
+      copyOnWrite();
+      instance.removeSupportedRatio(index);
+      return this;
+    }
+
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<eu.long1.nativecamera.proto.Range> getSupportedPreviewFpsList() {
+      return java.util.Collections.unmodifiableList(
+          instance.getSupportedPreviewFpsList());
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    @java.lang.Override
+    public int getSupportedPreviewFpsCount() {
+      return instance.getSupportedPreviewFpsCount();
+    }/**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    @java.lang.Override
+    public eu.long1.nativecamera.proto.Range getSupportedPreviewFps(int index) {
+      return instance.getSupportedPreviewFps(index);
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder setSupportedPreviewFps(
+        int index, eu.long1.nativecamera.proto.Range value) {
+      copyOnWrite();
+      instance.setSupportedPreviewFps(index, value);
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder setSupportedPreviewFps(
+        int index, eu.long1.nativecamera.proto.Range.Builder builderForValue) {
+      copyOnWrite();
+      instance.setSupportedPreviewFps(index,
+          builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder addSupportedPreviewFps(eu.long1.nativecamera.proto.Range value) {
+      copyOnWrite();
+      instance.addSupportedPreviewFps(value);
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder addSupportedPreviewFps(
+        int index, eu.long1.nativecamera.proto.Range value) {
+      copyOnWrite();
+      instance.addSupportedPreviewFps(index, value);
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder addSupportedPreviewFps(
+        eu.long1.nativecamera.proto.Range.Builder builderForValue) {
+      copyOnWrite();
+      instance.addSupportedPreviewFps(builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder addSupportedPreviewFps(
+        int index, eu.long1.nativecamera.proto.Range.Builder builderForValue) {
+      copyOnWrite();
+      instance.addSupportedPreviewFps(index,
+          builderForValue.build());
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder addAllSupportedPreviewFps(
+        java.lang.Iterable<? extends eu.long1.nativecamera.proto.Range> values) {
+      copyOnWrite();
+      instance.addAllSupportedPreviewFps(values);
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder clearSupportedPreviewFps() {
+      copyOnWrite();
+      instance.clearSupportedPreviewFps();
+      return this;
+    }
+    /**
+     * <code>repeated .Range supported_preview_fps = 15;</code>
+     */
+    public Builder removeSupportedPreviewFps(int index) {
+      copyOnWrite();
+      instance.removeSupportedPreviewFps(index);
+      return this;
+    }
+
     // @@protoc_insertion_point(builder_scope:CameraState)
   }
   @java.lang.Override
@@ -1656,11 +2271,17 @@ public  final class CameraState extends
             "whiteBalance_",
             "playSoundOnCapture_",
             "useCamera2_",
+            "orientation_",
+            "previewSize_",
+            "supportedRatio_",
+            eu.long1.nativecamera.proto.CameraAspectRatio.class,
+            "supportedPreviewFps_",
+            eu.long1.nativecamera.proto.Range.class,
           };
           java.lang.String info =
-              "\u0000\u000b\u0000\u0000\u0001\u000b\u000b\u0000\u0000\u0000\u0001\u0001\u0002\u0001" +
+              "\u0000\u000f\u0000\u0000\u0001\u000f\u000f\u0000\u0002\u0000\u0001\u0001\u0002\u0001" +
               "\u0003\t\u0004\u0001\u0005\u0208\u0006\u0007\u0007\f\b\u0001\t\f\n\u0007\u000b\u0007" +
-              "";
+              "\f\f\r\t\u000e\u001b\u000f\u001b";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through
