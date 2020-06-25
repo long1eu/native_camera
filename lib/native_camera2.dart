@@ -110,8 +110,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     return Container(
       color: Colors.red,
       child: Container(
-        width: width,
-        height: height,
+        // width: width,
+        // height: height,
         color: Colors.green,
         child: Center(
           child: flutter.AspectRatio(
