@@ -216,11 +216,11 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                           ),
                           Container(
                             alignment: AlignmentDirectional.bottomStart,
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              runAlignment: WrapAlignment.center,
-                              children: [
-                                ...controller.value.supportedRatios.map((CameraAspectRatio ratio) {
+                            child: Container(
+                              height: 32.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: controller.value.supportedRatios.map((CameraAspectRatio ratio) {
                                   return IconButton(
                                     icon: Text(
                                       '${ratio.x}:${ratio.y}',
@@ -232,8 +232,8 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                                       setState(() => this.ratio = ratio);
                                     },
                                   );
-                                }),
-                              ],
+                                }).toList(),
+                              ),
                             ),
                           ),
                         ],
