@@ -31,7 +31,8 @@ class _CameraExampleAppState extends State<CameraExampleApp>
 
   @override
   Future<void> onPermissionGranted() async {
-    final List<CameraInfo> cameras = await NativeCamera.instance.getAvailableCameras();
+    final List<CameraInfo> cameras =
+        await NativeCamera.instance.getAvailableCameras();
     this.cameras = cameras;
     if (cameras.isNotEmpty) {
       cameraIndex = 0;
@@ -43,37 +44,6 @@ class _CameraExampleAppState extends State<CameraExampleApp>
     setState(() {
       // changes to the values of the camera controller
     });
-  }
-
-  IconData getCameraIcon() {
-    final CameraInfo camera = cameras[nextCamera];
-    switch (camera.facing) {
-      case CameraInfo_LensFacing.FRONT:
-        return Icons.camera_front;
-      case CameraInfo_LensFacing.BACK:
-        return Icons.camera_rear;
-      case CameraInfo_LensFacing.EXTERNAL:
-        return Icons.insert_link;
-      default:
-        throw ArgumentError('Unknown camera source.');
-    }
-  }
-
-  IconData getFlashIcon(CameraState_Flash flash) {
-    switch (flash) {
-      case CameraState_Flash.FLASH_ON:
-        return Icons.flash_on;
-      case CameraState_Flash.FLASH_AUTO:
-        return Icons.flash_auto;
-      case CameraState_Flash.FLASH_OFF:
-        return Icons.flash_off;
-      case CameraState_Flash.FLASH_TORCH:
-        return Icons.lightbulb_outline;
-      case CameraState_Flash.FLASH_RED_EYE:
-        return Icons.remove_red_eye;
-      default:
-        throw ArgumentError('Unknown camera source.');
-    }
   }
 
   int get nextCamera {
@@ -106,7 +76,8 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                     return permissionMessage;
                   }
 
-                  final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+                  final bool isPortrait = MediaQuery.of(context).orientation ==
+                      Orientation.portrait;
                   return Container(
                     constraints: BoxConstraints.expand(),
                     child: Stack(
@@ -128,42 +99,13 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                           ),
                         if (controller != null) ...<Widget>[
                           Container(
-                            alignment: AlignmentDirectional.topStart,
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(
-                                    getCameraIcon(),
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    setState(() => cameraIndex = nextCamera);
-                                  },
-                                ),
-                                ...CameraState_Flash.values
-                                    // red eye is only available on Android
-                                    .where((element) => Platform.isIOS || element != CameraState_Flash.FLASH_RED_EYE)
-                                    .map((CameraState_Flash flash) {
-                                  return IconButton(
-                                    icon: Icon(
-                                      getFlashIcon(flash),
-                                      color: this.flash == flash ? Theme.of(context).primaryColor : Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      setState(() => this.flash = flash);
-                                    },
-                                  );
-                                }),
-                              ],
-                            ),
-                          ),
-                          Container(
                             padding: EdgeInsetsDirectional.only(
                               bottom: isPortrait ? 64.0 : 0.0,
                               start: isPortrait ? 0.0 : 32.0,
                             ),
                             child: Flex(
-                              direction: isPortrait ? Axis.horizontal : Axis.vertical,
+                              direction:
+                                  isPortrait ? Axis.horizontal : Axis.vertical,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -173,67 +115,48 @@ class _CameraExampleAppState extends State<CameraExampleApp>
                                     alignment: isPortrait
                                         ? AlignmentDirectional.bottomCenter
                                         : AlignmentDirectional.centerStart,
-                                    child: SizedBox(
-                                      width: 64.0,
-                                      height: 64.0,
-                                      child: Material(
-                                        elevation: 6.0,
-                                        shape: const CircleBorder(),
-                                        child: InkWell(
-                                          customBorder: const CircleBorder(),
-                                          onTap: () async {
-                                            final TakePictureResponse result = await controller.takePicture();
-                                            setState(() => lastImage = File.fromUri(Uri.parse(result.uri)));
-                                          },
-                                        ),
-                                      ),
+                                    child: ShutterButton(
+                                      onTap: () async {
+                                        final TakePictureResponse result =
+                                            await controller.takePicture();
+                                        setState(() => lastImage = File.fromUri(
+                                            Uri.parse(result.uri)));
+                                      },
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Container(
-                                    alignment:
-                                        isPortrait ? AlignmentDirectional.bottomEnd : AlignmentDirectional.centerEnd,
-                                    padding: EdgeInsetsDirectional.only(end: 16.0),
-                                    child: Container(
-                                      width: 64.0,
-                                      height: 64.0,
-                                      color: Colors.grey.shade900,
-                                      child: lastImage != null
-                                          ? Image.file(
-                                              lastImage,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Icon(
-                                              Icons.photo,
-                                              color: Colors.white,
-                                            ),
-                                    ),
+                                    alignment: isPortrait
+                                        ? AlignmentDirectional.bottomEnd
+                                        : AlignmentDirectional.centerEnd,
+                                    padding:
+                                        EdgeInsetsDirectional.only(end: 16.0),
+                                    child:
+                                        TakenImagePreview(lastImage: lastImage),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           Container(
+                            alignment: AlignmentDirectional.topStart,
+                            child: CameraControls(
+                              camera: cameras[cameraIndex],
+                              onCameraChanged: () =>
+                                  setState(() => cameraIndex = nextCamera),
+                              flash: flash,
+                              onFlashChanged: (newFlash) =>
+                                  setState(() => this.flash = newFlash),
+                            ),
+                          ),
+                          Container(
                             alignment: AlignmentDirectional.bottomStart,
-                            child: Container(
-                              height: 32.0,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: controller.value.supportedRatios.map((CameraAspectRatio ratio) {
-                                  return IconButton(
-                                    icon: Text(
-                                      '${ratio.x}:${ratio.y}',
-                                      style: TextStyle(
-                                        color: this.ratio == ratio ? Theme.of(context).primaryColor : Colors.white,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() => this.ratio = ratio);
-                                    },
-                                  );
-                                }).toList(),
-                              ),
+                            child: CameraRatioSelector(
+                              supportedRatios: controller.value.supportedRatios,
+                              currentRatio: ratio,
+                              onSelected: (ratio) =>
+                                  setState(() => this.ratio = ratio),
                             ),
                           ),
                         ],
@@ -245,6 +168,216 @@ class _CameraExampleAppState extends State<CameraExampleApp>
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class CameraControls extends StatelessWidget {
+  final CameraInfo camera;
+  final VoidCallback onCameraChanged;
+  final CameraState_Flash flash;
+  final Function(CameraState_Flash) onFlashChanged;
+
+  const CameraControls({
+    Key key,
+    this.camera,
+    this.onCameraChanged,
+    this.onFlashChanged,
+    this.flash,
+  }) : super(key: key);
+
+  IconData getCameraIcon() {
+    // final CameraInfo camera = cameras[nextCamera];
+    switch (camera.facing) {
+      case CameraInfo_LensFacing.FRONT:
+        return Icons.camera_front;
+      case CameraInfo_LensFacing.BACK:
+        return Icons.camera_rear;
+      case CameraInfo_LensFacing.EXTERNAL:
+        return Icons.insert_link;
+      default:
+        throw ArgumentError('Unknown camera source.');
+    }
+  }
+
+  IconData getFlashIcon(CameraState_Flash flash) {
+    switch (flash) {
+      case CameraState_Flash.FLASH_ON:
+        return Icons.flash_on;
+      case CameraState_Flash.FLASH_AUTO:
+        return Icons.flash_auto;
+      case CameraState_Flash.FLASH_OFF:
+        return Icons.flash_off;
+      case CameraState_Flash.FLASH_TORCH:
+        return Icons.lightbulb_outline;
+      case CameraState_Flash.FLASH_RED_EYE:
+        return Icons.remove_red_eye;
+      default:
+        throw ArgumentError('Unknown camera source.');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black38,
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              getCameraIcon(),
+              color: Colors.white,
+            ),
+            onPressed: onCameraChanged,
+          ),
+          ...CameraState_Flash.values
+              // red eye is only available on Android
+              .where((element) =>
+                  Platform.isIOS || element != CameraState_Flash.FLASH_RED_EYE)
+              .map((CameraState_Flash flash) {
+            return IconButton(
+              icon: Icon(
+                getFlashIcon(flash),
+                color: this.flash == flash
+                    ? Theme.of(context).primaryColor
+                    : Colors.white,
+              ),
+              onPressed: () => onFlashChanged(flash),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class CameraRatioSelector extends StatelessWidget {
+  final List<CameraAspectRatio> supportedRatios;
+  final Function(CameraAspectRatio) onSelected;
+  final CameraAspectRatio currentRatio;
+
+  const CameraRatioSelector({
+    Key key,
+    this.supportedRatios,
+    this.onSelected,
+    this.currentRatio,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black38,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Icon(
+              Icons.aspect_ratio,
+              color: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: supportedRatios.map(
+                  (CameraAspectRatio ratio) {
+                    final bool selected = this.currentRatio == ratio;
+                    return Material(
+                      type: selected
+                          ? MaterialType.button
+                          : MaterialType.transparency,
+                      color: selected ? Colors.white24 : null,
+                      child: InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            '${ratio.x}:${ratio.y}',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        onTap: () => onSelected(ratio),
+                      ),
+                    );
+                  },
+                ).toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ShutterButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const ShutterButton({
+    Key key,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 64.0,
+      height: 64.0,
+      child: Material(
+        elevation: 6.0,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+        ),
+      ),
+    );
+  }
+}
+
+class TakenImagePreview extends StatelessWidget {
+  const TakenImagePreview({
+    Key key,
+    @required this.lastImage,
+  }) : super(key: key);
+
+  final File lastImage;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: lastImage != null
+          ? () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(),
+                    body: Center(
+                        child: Hero(tag: '1', child: Image.file(lastImage))),
+                  ),
+                ),
+              )
+          : null,
+      child: Container(
+        width: 64.0,
+        height: 64.0,
+        color: Colors.grey.shade900,
+        child: lastImage != null
+            ? Hero(
+                tag: '1',
+                child: Image.file(
+                  lastImage,
+                  height: 64.0,
+                  width: 64.0,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Icon(
+                Icons.photo,
+                color: Colors.white,
+              ),
       ),
     );
   }
