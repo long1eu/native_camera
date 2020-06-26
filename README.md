@@ -1,14 +1,20 @@
 # native_camera
 
-A new Flutter project.
+This is a POC of [react-native-camera](https://github.com/react-native-community/react-native-camera) library port to Flutter.
+
+**Warning!** 
+
+This is highly experimental plugin and may not work on your device. Currently, only Android is supported.
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+To see how it works run the example from the main2.dart file:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+`flutter run -t lib/main2.dart`
+
+It may be necessary to install the app, enable the camera permission, and run again.
+
+
+| Android preview | iOS |
+|---|---|
+| ![Android Preview](docs/android_screenshot.jpg) | n/a |
